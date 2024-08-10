@@ -128,6 +128,10 @@ nav#TOC a.active {
 #| output: false
 #| code-fold: false
 library(tidyverse)
+library(RColorBrewer)
+library(ggridges)
+#library(modeest)
+library(ggstance)
 library(Ecdat)
 library(rpivotTable)
 library(VGAM)
@@ -152,6 +156,11 @@ La base de datos contiene 3.292 registros y dentro de cada fila tenemos:
 ```{r}
 summary(Cracker)
 ```
+
+```{r}
+paleta_choice <- c("lightsalmon", "darkolivegreen3", "lightblue", "mediumorchid")
+```
+
 
 ## Datos por individuo
 
@@ -265,8 +274,30 @@ data_2 |> ggplot() + geom_point(aes(x=precio_preferencia, y=precio_medio, colour
   geom_abline(intercept = 0) + xlim(30, 150) + ylim(30, 150) +
   xlab("Precio de la marca escogida (choice)") + 
   ylab("Precio medio de las cuatro marcas")+
+  scale_color_manual(values = paleta_choice) +
   labs(colour="choice")
 ```
+Tenemos la distribución del precio para cada una de las marcas y marcamos la media del precio de cada una de ellas. Las marcas Sunshine y Klebbe son bimodales.
+
+```{r}
+#| warning: false
+#| out-width: 80%
+Cracker_clean |> select(contains("price")) |> head() |> pivot_longer(cols = c(price.sunshine,price.kleebler ,price.nabisco ,price.private), names_to = "Marca", values_to = "Precio") |> ggplot(aes(x = Precio, y = Marca, fill=Marca)) +
+  geom_density_ridges(quantile_lines=TRUE, quantile_fun=function(Precio,...)mean(Precio),
+                      jittered_points = TRUE, position = "raincloud", scale = 0.9,
+                      aes(point_color = Marca, point_fill = Marca, point_shape = Marca)) +
+  stat_summaryh(fun.x=median,
+                          geom="text",
+                          aes(label=sprintf("%1.1f", ..x..)),
+                          position=position_nudge(y=-0.1),
+                          colour="black",
+                          size=3.5) +
+  scale_fill_manual(values = paleta_choice) +
+  labs(fill="",color="",
+       title = "Density Ridges del precio",
+       subtitle = "se incluyen las medianas")
+```
+
 
 # Modelo predictivo
 
@@ -349,7 +380,7 @@ plotvgam(modelo2, se=TRUE, scale=12,
          lcol=mycol[3], scol=mycol[3], which.term=3, ylim = c(-1, 1))
 ```
 
-[**Test**]{.underline}
+### Test modelo 2 {.underline}
 
 La predicción del modelo nos devuelte el valor *response* o el valor *link*.
 
@@ -524,7 +555,7 @@ control = mmclogit.control(epsilon = 1e-10,
 #summary(modelo3)
 ```
 
-[**Test**]{.underline}
+### Test modelo3 {.underline}
 
 En este caso los resultados del modelo3 y el modelo3_escalado son los mismos y solo cambia el valor de los parámetros.
 
@@ -554,35 +585,52 @@ choice = train_0$choice) |> mutate(category=as.factor(category))
 ```
 
 ```{r}
-#| layout-ncol: 2
+data.frame(Coefficientes = names(modelo3$coefficients), modelo3 = modelo3$coefficients, modelo3_escalado = modelo3_escalado$coefficients, row.names = NULL) |> head()
+```
+
+
+```{r}
 caret::confusionMatrix(data=pred$category, reference = pred$choice)
+```
+
+```{r}
 caret::confusionMatrix(data=pred_escalado$category, reference = pred_escalado$choice)
 ```
+
+
+### Modelo final
 
 [**Modelo 4**]{.underline}
 
 Eliminamos los siguientes parámetros en orden. El criterio de eliminación es no incluir parámetros no significativos para ninguno de los tres modelos. Tras eliminar un parámetro se vuelve a evaluar el modelo.\
-\* intercepto\
-\* price.private\
-\* feat.nabisco\
-\* feat.kleebler
+- intercepto  
+- disp.nabisco  
+- disp.private  
+- disp.kleebler  
+- feat.nabisco   
 
 ```{r}
 #| collapse: true
-modelo4 <- mblogit(relevel(choice, ref = "private") ~ disp.sunshine + disp.kleebler + disp.nabisco + disp.private + feat.sunshine +
-feat.private + price.sunshine + price.kleebler + price.nabisco - 1, 
-                random = ~ 1 | id, 
+modelo4 <- mblogit(relevel(choice, ref = "private") ~ disp.sunshine + feat.sunshine +
+feat.kleebler + feat.private + price.sunshine + price.kleebler + price.nabisco + price.private -1, 
+                random = ~ 1 | id,
                 data = train_0,
 control = mmclogit.control(epsilon = 1e-08,
-                 maxit = 10000, trace=FALSE, # Intento aumentar número de iteraciones para que converga
+                 maxit = 100, trace=FALSE, # Intento aumentar número de iteraciones para que converga
                  trace.inner=FALSE,
                  avoid.increase = FALSE,
                  break.on.increase = FALSE,
                  break.on.infinite = FALSE,
                  break.on.negative = FALSE))
+```
 
+
+```{r}
 summary(modelo4)
 ```
+
+
+[**Test**]{.underline}
 
 ```{r}
 pred <- 
@@ -599,37 +647,17 @@ choice = train_0$choice) |> mutate(category=as.factor(category))
 caret::confusionMatrix(data=pred$category, reference = pred$choice)
 ```
 
-[**Test**]{.underline}
-
-La predicción del modelo nos devuelte el valor *response* o el valor *link*.
-
-El valor *link* compara la probabilidad de elección de cada marca en comparación con la marca de referencia. Es decir, para cada nivel de la variable respuesta la predicción nos indica si es menos probable que la marca de referencia (valor menor a 0), igual de probable (valor igual a 0) o más probable (valor mayor a 0).
-
-El valor *response* nos devuelve la probabilidad de elección de cada marca.
-
-```{r}
-pred <- 
-predict(modelo4, test_0, type="response")
-
-pred <- 
-cbind(
-pred |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
-choice = test_0$choice) |> mutate(category=as.factor(category))
-```
-
-```{r}
-#| warning: false
-caret::confusionMatrix(data=pred$category, reference = pred$choice)
-```
-
 ```{r}
 #| layout-ncol: 2
 predict(modelo4, newdata = test_0, type = "link") |> head()
 predict(modelo4, newdata = test_0, type = "response") |> head()
 ```
 
-$\exp(-0.2839232)$ = `r exp(-0.2839232)`\
-$\frac{0.007711103}{0.01024290}$ = `r 0.007711103 / 0.01024290`
+$\exp(0.2067485)$ = `r exp(0.2067485)`\
+$\frac{0.009972645}{0.008109995}$ = `r 0.009972645 / 0.008109995`
+
+
+### Comparación de modelos
 
 # Bibliografía
 

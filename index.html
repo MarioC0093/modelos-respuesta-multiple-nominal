@@ -101,11 +101,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo">Objetivo</a></li>
   <li><a href="#enfoque-del-modelo" id="toc-enfoque-del-modelo" class="nav-link" data-scroll-target="#enfoque-del-modelo">Enfoque del modelo</a></li>
   <li><a href="#train-y-test" id="toc-train-y-test" class="nav-link" data-scroll-target="#train-y-test">Train y test</a></li>
-  <li><a href="#modelo-respuesta-múltiple-nominal" id="toc-modelo-respuesta-múltiple-nominal" class="nav-link" data-scroll-target="#modelo-respuesta-múltiple-nominal">Modelo respuesta múltiple nominal</a></li>
+  <li><a href="#modelo-respuesta-múltiple-nominal" id="toc-modelo-respuesta-múltiple-nominal" class="nav-link" data-scroll-target="#modelo-respuesta-múltiple-nominal">Modelo respuesta múltiple nominal</a>
+  <ul class="collapse">
+  <li><a href="#test-modelo-2" id="toc-test-modelo-2" class="nav-link" data-scroll-target="#test-modelo-2">Test modelo 2</a></li>
+  </ul></li>
   <li><a href="#modelo-respuesta-múltiple-nominal-medidas-repetidas" id="toc-modelo-respuesta-múltiple-nominal-medidas-repetidas" class="nav-link" data-scroll-target="#modelo-respuesta-múltiple-nominal-medidas-repetidas">Modelo respuesta múltiple nominal medidas repetidas</a>
   <ul class="collapse">
   <li><a href="#vif" id="toc-vif" class="nav-link" data-scroll-target="#vif">VIF</a></li>
   <li><a href="#escalado-de-variables" id="toc-escalado-de-variables" class="nav-link" data-scroll-target="#escalado-de-variables">Escalado de variables</a></li>
+  <li><a href="#test-modelo3" id="toc-test-modelo3" class="nav-link" data-scroll-target="#test-modelo3">Test modelo3</a></li>
+  <li><a href="#modelo-final" id="toc-modelo-final" class="nav-link" data-scroll-target="#modelo-final">Modelo final</a></li>
+  <li><a href="#comparación-de-modelos" id="toc-comparación-de-modelos" class="nav-link" data-scroll-target="#comparación-de-modelos">Comparación de modelos</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía</a></li>
@@ -253,11 +259,15 @@ nav#TOC a.active {
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Ecdat)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpivotTable)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclogit)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#library(modeest)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstance)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Ecdat)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpivotTable)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclogit)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="database" class="level1">
 <h1>Database</h1>
@@ -305,6 +315,12 @@ nav#TOC a.active {
  Max.   :115.00                  </code></pre>
 </div>
 </div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>paleta_choice <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lightsalmon"</span>, <span class="st">"darkolivegreen3"</span>, <span class="st">"lightblue"</span>, <span class="st">"mediumorchid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="datos-por-individuo" class="level2">
 <h2 class="anchored" data-anchor-id="datos-por-individuo">Datos por individuo</h2>
@@ -312,7 +328,7 @@ nav#TOC a.active {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">select</span>(id) <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(Freq) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">select</span>(id) <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(Freq) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Freq      
@@ -328,7 +344,7 @@ nav#TOC a.active {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">filter</span>(id<span class="sc">==</span><span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">filter</span>(id<span class="sc">==</span><span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  id disp.sunshine disp.kleebler disp.nabisco disp.private feat.sunshine feat.kleebler feat.nabisco
@@ -352,10 +368,10 @@ nav#TOC a.active {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_0 <span class="ot">&lt;-</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">select</span>(id, choice) <span class="sc">|&gt;</span> <span class="fu">group_by_all</span>() <span class="sc">|&gt;</span> <span class="fu">count</span>(,<span class="at">.drop =</span> <span class="cn">FALSE</span>)  <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">p =</span> n<span class="sc">/</span><span class="fu">sum</span>(n), <span class="at">.by=</span>id) <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#mutate(scale = scale(p, scale = FALSE), .by=id) |&gt; </span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(id,<span class="sc">-</span>n) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">preference =</span> <span class="fu">row_number</span>(), <span class="at">.by=</span>id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data_0 <span class="ot">&lt;-</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">select</span>(id, choice) <span class="sc">|&gt;</span> <span class="fu">group_by_all</span>() <span class="sc">|&gt;</span> <span class="fu">count</span>(,<span class="at">.drop =</span> <span class="cn">FALSE</span>)  <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">p =</span> n<span class="sc">/</span><span class="fu">sum</span>(n), <span class="at">.by=</span>id) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#mutate(scale = scale(p, scale = FALSE), .by=id) |&gt; </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(id,<span class="sc">-</span>n) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">preference =</span> <span class="fu">row_number</span>(), <span class="at">.by=</span>id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>El individuo 1 ha elegido la marca Nabisco en el 87.5 % de las veces.</p>
@@ -378,10 +394,10 @@ nav#TOC a.active {
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data_0 <span class="sc">|&gt;</span> <span class="fu">select</span>(choice, preference) <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">addmargins</span>()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  data_0 <span class="sc">|&gt;</span> <span class="fu">select</span>(choice, preference) <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">prop.table</span>(<span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">addmargins</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data_0 <span class="sc">|&gt;</span> <span class="fu">select</span>(choice, preference) <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">addmargins</span>()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  data_0 <span class="sc">|&gt;</span> <span class="fu">select</span>(choice, preference) <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">prop.table</span>(<span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">addmargins</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
@@ -413,8 +429,8 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="ot">&lt;-</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>data_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">scale =</span> <span class="fu">scale</span>(p, <span class="at">scale =</span> <span class="cn">FALSE</span>), <span class="at">.by=</span>id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="ot">&lt;-</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>data_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">scale =</span> <span class="fu">scale</span>(p, <span class="at">scale =</span> <span class="cn">FALSE</span>), <span class="at">.by=</span>id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Esta escala tiene una relación directa con la proporción de cada una de las elecciones. Se mueve entre los valores -0.25 y 0.75.</p>
@@ -425,7 +441,7 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="sc">|&gt;</span> <span class="fu">select</span>(choice, p, scale) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="sc">|&gt;</span> <span class="fu">select</span>(choice, p, scale) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      choice          p                 scale.V1      
@@ -441,7 +457,7 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="sc">|&gt;</span> <span class="fu">filter</span>(id<span class="sc">==</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="sc">|&gt;</span> <span class="fu">filter</span>(id<span class="sc">==</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 6
@@ -457,7 +473,7 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="sc">|&gt;</span> <span class="fu">filter</span>(id <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>,<span class="dv">123</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="sc">|&gt;</span> <span class="fu">filter</span>(id <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>,<span class="dv">123</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 6
@@ -483,10 +499,10 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">filter</span>(price.nabisco<span class="sc">==</span><span class="dv">0</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">'nabisco'</span>),<span class="st">'choice'</span>))</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>Cracker_clean <span class="ot">&lt;-</span> Cracker <span class="sc">|&gt;</span> <span class="fu">filter</span>(price.nabisco<span class="sc">&gt;</span><span class="dv">0</span>) </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Cracker <span class="sc">|&gt;</span> <span class="fu">filter</span>(price.nabisco<span class="sc">==</span><span class="dv">0</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">'nabisco'</span>),<span class="st">'choice'</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>Cracker_clean <span class="ot">&lt;-</span> Cracker <span class="sc">|&gt;</span> <span class="fu">filter</span>(price.nabisco<span class="sc">&gt;</span><span class="dv">0</span>) </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>     disp.nabisco feat.nabisco price.nabisco  choice
@@ -501,7 +517,7 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Cracker_clean <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">'price'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Cracker_clean <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">'price'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code> price.sunshine  price.kleebler  price.nabisco price.private   
@@ -517,28 +533,52 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data_2 <span class="ot">&lt;-</span> Cracker_clean <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">precio_medio =</span> (price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private) <span class="sc">/</span> <span class="dv">4</span>,</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">precio_preferencia =</span> <span class="fu">case_when</span>(choice <span class="sc">==</span> <span class="st">"sunshine"</span> <span class="sc">~</span> price.sunshine,</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                                                                        choice <span class="sc">==</span> <span class="st">"kleebler"</span> <span class="sc">~</span> price.kleebler,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                                                                        choice <span class="sc">==</span> <span class="st">"nabisco"</span> <span class="sc">~</span> price.nabisco,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                                                                        choice <span class="sc">==</span> <span class="st">"private"</span> <span class="sc">~</span> price.private),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">id=</span><span class="fu">factor</span>(id))</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># |&gt;</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#select(precio_preferencia, precio_medio, id, choice)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>data_2 <span class="ot">&lt;-</span> Cracker_clean <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">precio_medio =</span> (price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private) <span class="sc">/</span> <span class="dv">4</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">precio_preferencia =</span> <span class="fu">case_when</span>(choice <span class="sc">==</span> <span class="st">"sunshine"</span> <span class="sc">~</span> price.sunshine,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                                                        choice <span class="sc">==</span> <span class="st">"kleebler"</span> <span class="sc">~</span> price.kleebler,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                                                        choice <span class="sc">==</span> <span class="st">"nabisco"</span> <span class="sc">~</span> price.nabisco,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                                                        choice <span class="sc">==</span> <span class="st">"private"</span> <span class="sc">~</span> price.private),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">id=</span><span class="fu">factor</span>(id))</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># |&gt;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#select(precio_preferencia, precio_medio, id, choice)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>La marca Private casi siempre tiene un precio superior al precio medio de las cuatro marcas cuando es la marca que el individuo prefiere. Aquellos casos donde la marca elegida es la marca Nabisco, el precio de esta elección casi siempre es inferior al precio medio de las cuatro marcas.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>data_2 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>precio_preferencia, <span class="at">y=</span>precio_medio, <span class="at">colour =</span> <span class="fu">factor</span>(choice))) <span class="sc">+</span> </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">0</span>) <span class="sc">+</span> <span class="fu">xlim</span>(<span class="dv">30</span>, <span class="dv">150</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">30</span>, <span class="dv">150</span>) <span class="sc">+</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Precio de la marca escogida (choice)"</span>) <span class="sc">+</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Precio medio de las cuatro marcas"</span>)<span class="sc">+</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"choice"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data_2 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>precio_preferencia, <span class="at">y=</span>precio_medio, <span class="at">colour =</span> <span class="fu">factor</span>(choice))) <span class="sc">+</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">0</span>) <span class="sc">+</span> <span class="fu">xlim</span>(<span class="dv">30</span>, <span class="dv">150</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">30</span>, <span class="dv">150</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Precio de la marca escogida (choice)"</span>) <span class="sc">+</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Precio medio de las cuatro marcas"</span>)<span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> paleta_choice) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"choice"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" style="width:80.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" style="width:80.0%"></p>
+</div>
+</div>
+<p>Tenemos la distribución del precio para cada una de las marcas y marcamos la media del precio de cada una de ellas. Las marcas Sunshine y Klebbe son bimodales.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Cracker_clean <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"price"</span>)) <span class="sc">|&gt;</span> <span class="fu">head</span>() <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(price.sunshine,price.kleebler ,price.nabisco ,price.private), <span class="at">names_to =</span> <span class="st">"Marca"</span>, <span class="at">values_to =</span> <span class="st">"Precio"</span>) <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Precio, <span class="at">y =</span> Marca, <span class="at">fill=</span>Marca)) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">quantile_lines=</span><span class="cn">TRUE</span>, <span class="at">quantile_fun=</span><span class="cf">function</span>(Precio,...)<span class="fu">mean</span>(Precio),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">jittered_points =</span> <span class="cn">TRUE</span>, <span class="at">position =</span> <span class="st">"raincloud"</span>, <span class="at">scale =</span> <span class="fl">0.9</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">aes</span>(<span class="at">point_color =</span> Marca, <span class="at">point_fill =</span> Marca, <span class="at">point_shape =</span> Marca)) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summaryh</span>(<span class="at">fun.x=</span>median,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">geom=</span><span class="st">"text"</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">sprintf</span>(<span class="st">"%1.1f"</span>, ..x..)),</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.1</span>),</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">colour=</span><span class="st">"black"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">size=</span><span class="fl">3.5</span>) <span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> paleta_choice) <span class="sc">+</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill=</span><span class="st">""</span>,<span class="at">color=</span><span class="st">""</span>,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Density Ridges del precio"</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"se incluyen las medianas"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" style="width:80.0%"></p>
 </div>
 </div>
 </section>
@@ -561,11 +601,11 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Cracker_clean <span class="ot">&lt;-</span> Cracker_clean <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">r=</span><span class="fu">row_number</span>())</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>test_0 <span class="ot">&lt;-</span> Cracker_clean <span class="sc">|&gt;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.10</span>, <span class="at">by =</span> <span class="fu">c</span>(id))</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>train_0 <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(Cracker_clean, test_0, <span class="at">by=</span><span class="st">'r'</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>Cracker_clean <span class="ot">&lt;-</span> Cracker_clean <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">r=</span><span class="fu">row_number</span>())</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>test_0 <span class="ot">&lt;-</span> Cracker_clean <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.10</span>, <span class="at">by =</span> <span class="fu">c</span>(id))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>train_0 <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(Cracker_clean, test_0, <span class="at">by=</span><span class="st">'r'</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -579,76 +619,76 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>modelo1 <span class="ot">&lt;-</span> <span class="fu">vglm</span>((choice) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="at">family=</span><span class="fu">multinomial</span>(<span class="at">refLevel=</span><span class="st">'private'</span>),</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo1)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="do">## vglm(formula = (choice) ~ disp.sunshine + disp.kleebler + disp.nabisco + </span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="do">##     disp.private + feat.sunshine + feat.kleebler + feat.nabisco + </span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     feat.private + price.sunshine + price.kleebler + price.nabisco + </span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="do">##     price.private, family = multinomial(refLevel = "private"), </span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="do">##     data = train_0)</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients: </span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                   Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):1    -0.371567   1.100520  -0.338  0.73564    </span></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):2     2.549861   1.038657   2.455  0.01409 *  </span></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):3     2.371634   0.589147   4.026 5.68e-05 ***</span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine:1   0.132609   0.229104   0.579  0.56271    </span></span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine:2  -0.069164   0.288310  -0.240  0.81041    </span></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine:3  -0.010579   0.150467  -0.070  0.94395    </span></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:1  -0.393682   0.343247  -1.147  0.25141    </span></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:2   0.490660   0.245832   1.996  0.04594 *  </span></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:3   0.352822   0.153248   2.302  0.02132 *  </span></span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:1    0.602452   0.171697   3.509  0.00045 ***</span></span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:2   -0.237287   0.187923  -1.263  0.20671    </span></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:3    0.138710   0.091933   1.509  0.13135    </span></span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:1   -0.291666   0.333351  -0.875  0.38160    </span></span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:2    0.547604   0.300788   1.821  0.06867 .  </span></span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:3    0.292045   0.164870   1.771  0.07650 .  </span></span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine:1   0.424514   0.320745   1.324  0.18566    </span></span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine:2  -0.318405   0.575457  -0.553  0.58005    </span></span>
-<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine:3  -0.002787   0.263883  -0.011  0.99157    </span></span>
-<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:1   1.105727   0.426805   2.591  0.00958 ** </span></span>
-<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:2   0.968945   0.343167   2.824  0.00475 ** </span></span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:3   0.814436   0.257045   3.168  0.00153 ** </span></span>
-<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:1    0.850133   0.306648   2.772  0.00557 ** </span></span>
-<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:2    0.673887   0.362386   1.860  0.06294 .  </span></span>
-<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:3    0.835435   0.182237   4.584 4.55e-06 ***</span></span>
-<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:1    0.503238   0.413168   1.218  0.22322    </span></span>
-<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:2   -1.117189   0.553613  -2.018  0.04359 *  </span></span>
-<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:3   -0.453002   0.236248  -1.917  0.05518 .  </span></span>
-<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:1 -0.057617   0.007008  -8.222  &lt; 2e-16 ***</span></span>
-<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:2  0.001373   0.007364   0.186  0.85211    </span></span>
-<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:3 -0.005830   0.004097  -1.423  0.15469    </span></span>
-<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:1  0.015718   0.008700   1.807  0.07082 .  </span></span>
-<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:2 -0.049030   0.008632  -5.680 1.35e-08 ***</span></span>
-<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:3  0.007070   0.004442   1.591  0.11150    </span></span>
-<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:1   0.008991   0.006987   1.287  0.19816    </span></span>
-<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:2  -0.000778   0.006570  -0.118  0.90573    </span></span>
-<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:3  -0.031939   0.003389  -9.424  &lt; 2e-16 ***</span></span>
-<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:1   0.015571   0.007137   2.182  0.02913 *  </span></span>
-<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:2   0.017209   0.006668   2.581  0.00986 ** </span></span>
-<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:3   0.018100   0.003719   4.866 1.14e-06 ***</span></span>
-<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
-<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
-<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Names of linear predictors: log(mu[,1]/mu[,4]), log(mu[,2]/mu[,4]), log(mu[,3]/mu[,4])</span></span>
-<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual deviance: 5982.475 on 9027 degrees of freedom</span></span>
-<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a><span class="do">## Log-likelihood: -2991.238 on 9027 degrees of freedom</span></span>
-<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Fisher scoring iterations: 5 </span></span>
-<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Hauck-Donner effect detected in the following estimate(s):</span></span>
-<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a><span class="do">## 'price.sunshine:1', 'price.kleebler:2'</span></span>
-<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a><span class="do">## Reference group is level  4  of the response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>modelo1 <span class="ot">&lt;-</span> <span class="fu">vglm</span>((choice) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="at">family=</span><span class="fu">multinomial</span>(<span class="at">refLevel=</span><span class="st">'private'</span>),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo1)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="do">## vglm(formula = (choice) ~ disp.sunshine + disp.kleebler + disp.nabisco + </span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="do">##     disp.private + feat.sunshine + feat.kleebler + feat.nabisco + </span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     feat.private + price.sunshine + price.kleebler + price.nabisco + </span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="do">##     price.private, family = multinomial(refLevel = "private"), </span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="do">##     data = train_0)</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients: </span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                   Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):1    -0.371567   1.100520  -0.338  0.73564    </span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):2     2.549861   1.038657   2.455  0.01409 *  </span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):3     2.371634   0.589147   4.026 5.68e-05 ***</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine:1   0.132609   0.229104   0.579  0.56271    </span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine:2  -0.069164   0.288310  -0.240  0.81041    </span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine:3  -0.010579   0.150467  -0.070  0.94395    </span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:1  -0.393682   0.343247  -1.147  0.25141    </span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:2   0.490660   0.245832   1.996  0.04594 *  </span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:3   0.352822   0.153248   2.302  0.02132 *  </span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:1    0.602452   0.171697   3.509  0.00045 ***</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:2   -0.237287   0.187923  -1.263  0.20671    </span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:3    0.138710   0.091933   1.509  0.13135    </span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:1   -0.291666   0.333351  -0.875  0.38160    </span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:2    0.547604   0.300788   1.821  0.06867 .  </span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:3    0.292045   0.164870   1.771  0.07650 .  </span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine:1   0.424514   0.320745   1.324  0.18566    </span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine:2  -0.318405   0.575457  -0.553  0.58005    </span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine:3  -0.002787   0.263883  -0.011  0.99157    </span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:1   1.105727   0.426805   2.591  0.00958 ** </span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:2   0.968945   0.343167   2.824  0.00475 ** </span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:3   0.814436   0.257045   3.168  0.00153 ** </span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:1    0.850133   0.306648   2.772  0.00557 ** </span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:2    0.673887   0.362386   1.860  0.06294 .  </span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:3    0.835435   0.182237   4.584 4.55e-06 ***</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:1    0.503238   0.413168   1.218  0.22322    </span></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:2   -1.117189   0.553613  -2.018  0.04359 *  </span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:3   -0.453002   0.236248  -1.917  0.05518 .  </span></span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:1 -0.057617   0.007008  -8.222  &lt; 2e-16 ***</span></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:2  0.001373   0.007364   0.186  0.85211    </span></span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:3 -0.005830   0.004097  -1.423  0.15469    </span></span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:1  0.015718   0.008700   1.807  0.07082 .  </span></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:2 -0.049030   0.008632  -5.680 1.35e-08 ***</span></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:3  0.007070   0.004442   1.591  0.11150    </span></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:1   0.008991   0.006987   1.287  0.19816    </span></span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:2  -0.000778   0.006570  -0.118  0.90573    </span></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:3  -0.031939   0.003389  -9.424  &lt; 2e-16 ***</span></span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:1   0.015571   0.007137   2.182  0.02913 *  </span></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:2   0.017209   0.006668   2.581  0.00986 ** </span></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:3   0.018100   0.003719   4.866 1.14e-06 ***</span></span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Names of linear predictors: log(mu[,1]/mu[,4]), log(mu[,2]/mu[,4]), log(mu[,3]/mu[,4])</span></span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual deviance: 5982.475 on 9027 degrees of freedom</span></span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a><span class="do">## Log-likelihood: -2991.238 on 9027 degrees of freedom</span></span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Fisher scoring iterations: 5 </span></span>
+<span id="cb29-65"><a href="#cb29-65" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Hauck-Donner effect detected in the following estimate(s):</span></span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a><span class="do">## 'price.sunshine:1', 'price.kleebler:2'</span></span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-69"><a href="#cb29-69" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a><span class="do">## Reference group is level  4  of the response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><u><strong>Modelo 2</strong></u></p>
@@ -656,69 +696,69 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>modelo2 <span class="ot">&lt;-</span> <span class="fu">vglm</span>((choice) <span class="sc">~</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                  feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">family=</span><span class="fu">multinomial</span>(<span class="at">refLevel=</span><span class="st">'private'</span>),</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo2)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="do">## vglm(formula = (choice) ~ disp.kleebler + disp.nabisco + disp.private + </span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="do">##     feat.kleebler + feat.nabisco + feat.private + price.sunshine + </span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     price.kleebler + price.nabisco + price.private, family = multinomial(refLevel = "private"), </span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="do">##     data = train_0)</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients: </span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="do">##                    Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):1     0.0151529  1.0657969   0.014 0.988656    </span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):2     2.4433041  1.0162492   2.404 0.016206 *  </span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):3     2.3584486  0.5685170   4.148 3.35e-05 ***</span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:1  -0.4109334  0.3456079  -1.189 0.234433    </span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:2   0.4986944  0.2448975   2.036 0.041716 *  </span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:3   0.3533531  0.1531462   2.307 0.021038 *  </span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:1    0.6265560  0.1710428   3.663 0.000249 ***</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:2   -0.2421768  0.1876353  -1.291 0.196815    </span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:3    0.1380648  0.0918016   1.504 0.132595    </span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:1   -0.3080303  0.3326407  -0.926 0.354438    </span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:2    0.5436649  0.3004812   1.809 0.070402 .  </span></span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:3    0.2920867  0.1647212   1.773 0.076192 .  </span></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:1   1.1671297  0.4266385   2.736 0.006226 ** </span></span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:2   0.9557485  0.3415322   2.798 0.005135 ** </span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:3   0.8146497  0.2565710   3.175 0.001498 ** </span></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:1    0.8362242  0.3064157   2.729 0.006352 ** </span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:2    0.6706660  0.3623797   1.851 0.064209 .  </span></span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:3    0.8358562  0.1822010   4.588 4.48e-06 ***</span></span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:1    0.4709882  0.4126084   1.141 0.253666    </span></span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:2   -1.1065705  0.5533831  -2.000 0.045538 *  </span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:3   -0.4531545  0.2362288  -1.918 0.055075 .  </span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:1 -0.0632866  0.0057637 -10.980  &lt; 2e-16 ***</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:2  0.0030933  0.0065791   0.470 0.638230    </span></span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:3 -0.0057063  0.0035560  -1.605 0.108562    </span></span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:1  0.0172282  0.0085896   2.006 0.044888 *  </span></span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:2 -0.0494362  0.0086086  -5.743 9.32e-09 ***</span></span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:3  0.0070815  0.0044332   1.597 0.110183    </span></span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:1   0.0090329  0.0069624   1.297 0.194499    </span></span>
-<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:2  -0.0008594  0.0065740  -0.131 0.895997    </span></span>
-<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:3  -0.0319371  0.0033881  -9.426  &lt; 2e-16 ***</span></span>
-<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:1   0.0156465  0.0071157   2.199 0.027887 *  </span></span>
-<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:2   0.0169181  0.0066223   2.555 0.010628 *  </span></span>
-<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:3   0.0180773  0.0036959   4.891 1.00e-06 ***</span></span>
-<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
-<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
-<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Names of linear predictors: log(mu[,1]/mu[,4]), log(mu[,2]/mu[,4]), log(mu[,3]/mu[,4])</span></span>
-<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual deviance: 5986.242 on 9033 degrees of freedom</span></span>
-<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a><span class="do">## Log-likelihood: -2993.121 on 9033 degrees of freedom</span></span>
-<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Fisher scoring iterations: 5 </span></span>
-<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Hauck-Donner effect detected in the following estimate(s):</span></span>
-<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 'price.sunshine:1', 'price.kleebler:2'</span></span>
-<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-62"><a href="#cb28-62" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb28-63"><a href="#cb28-63" aria-hidden="true" tabindex="-1"></a><span class="do">## Reference group is level  4  of the response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>modelo2 <span class="ot">&lt;-</span> <span class="fu">vglm</span>((choice) <span class="sc">~</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                  feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">family=</span><span class="fu">multinomial</span>(<span class="at">refLevel=</span><span class="st">'private'</span>),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo2)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="do">## vglm(formula = (choice) ~ disp.kleebler + disp.nabisco + disp.private + </span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="do">##     feat.kleebler + feat.nabisco + feat.private + price.sunshine + </span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     price.kleebler + price.nabisco + price.private, family = multinomial(refLevel = "private"), </span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="do">##     data = train_0)</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients: </span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="do">##                    Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):1     0.0151529  1.0657969   0.014 0.988656    </span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):2     2.4433041  1.0162492   2.404 0.016206 *  </span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):3     2.3584486  0.5685170   4.148 3.35e-05 ***</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:1  -0.4109334  0.3456079  -1.189 0.234433    </span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:2   0.4986944  0.2448975   2.036 0.041716 *  </span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler:3   0.3533531  0.1531462   2.307 0.021038 *  </span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:1    0.6265560  0.1710428   3.663 0.000249 ***</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:2   -0.2421768  0.1876353  -1.291 0.196815    </span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco:3    0.1380648  0.0918016   1.504 0.132595    </span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:1   -0.3080303  0.3326407  -0.926 0.354438    </span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:2    0.5436649  0.3004812   1.809 0.070402 .  </span></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private:3    0.2920867  0.1647212   1.773 0.076192 .  </span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:1   1.1671297  0.4266385   2.736 0.006226 ** </span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:2   0.9557485  0.3415322   2.798 0.005135 ** </span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.kleebler:3   0.8146497  0.2565710   3.175 0.001498 ** </span></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:1    0.8362242  0.3064157   2.729 0.006352 ** </span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:2    0.6706660  0.3623797   1.851 0.064209 .  </span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.nabisco:3    0.8358562  0.1822010   4.588 4.48e-06 ***</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:1    0.4709882  0.4126084   1.141 0.253666    </span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:2   -1.1065705  0.5533831  -2.000 0.045538 *  </span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private:3   -0.4531545  0.2362288  -1.918 0.055075 .  </span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:1 -0.0632866  0.0057637 -10.980  &lt; 2e-16 ***</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:2  0.0030933  0.0065791   0.470 0.638230    </span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine:3 -0.0057063  0.0035560  -1.605 0.108562    </span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:1  0.0172282  0.0085896   2.006 0.044888 *  </span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:2 -0.0494362  0.0086086  -5.743 9.32e-09 ***</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler:3  0.0070815  0.0044332   1.597 0.110183    </span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:1   0.0090329  0.0069624   1.297 0.194499    </span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:2  -0.0008594  0.0065740  -0.131 0.895997    </span></span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco:3  -0.0319371  0.0033881  -9.426  &lt; 2e-16 ***</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:1   0.0156465  0.0071157   2.199 0.027887 *  </span></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:2   0.0169181  0.0066223   2.555 0.010628 *  </span></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a><span class="do">## price.private:3   0.0180773  0.0036959   4.891 1.00e-06 ***</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Names of linear predictors: log(mu[,1]/mu[,4]), log(mu[,2]/mu[,4]), log(mu[,3]/mu[,4])</span></span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual deviance: 5986.242 on 9033 degrees of freedom</span></span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a><span class="do">## Log-likelihood: -2993.121 on 9033 degrees of freedom</span></span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Fisher scoring iterations: 5 </span></span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Hauck-Donner effect detected in the following estimate(s):</span></span>
+<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 'price.sunshine:1', 'price.kleebler:2'</span></span>
+<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a><span class="do">## Reference group is level  4  of the response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><u><strong>Coeficientes modelo 2</strong></u></p>
@@ -726,7 +766,7 @@ choice          1      2      3      4    Sum
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(modelo2, <span class="at">matrix =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(modelo2, <span class="at">matrix =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>               log(mu[,1]/mu[,4]) log(mu[,2]/mu[,4]) log(mu[,3]/mu[,4])
@@ -746,41 +786,42 @@ price.private         0.015646453       0.0169181035        0.018077284</code></
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mycol <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"darkgreen"</span>,<span class="st">"blue"</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plotvgam</span>(modelo2, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="dv">12</span>,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">lcol=</span>mycol[<span class="dv">1</span>], <span class="at">scol=</span>mycol[<span class="dv">1</span>], <span class="at">which.term=</span><span class="dv">1</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>mycol <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"darkgreen"</span>,<span class="st">"blue"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plotvgam</span>(modelo2, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="dv">12</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">lcol=</span>mycol[<span class="dv">1</span>], <span class="at">scol=</span>mycol[<span class="dv">1</span>], <span class="at">which.term=</span><span class="dv">1</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotvgam</span>(modelo2, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="dv">12</span>,</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">lcol=</span>mycol[<span class="dv">2</span>], <span class="at">scol=</span>mycol[<span class="dv">2</span>], <span class="at">which.term=</span><span class="dv">2</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotvgam</span>(modelo2, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="dv">12</span>,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">lcol=</span>mycol[<span class="dv">2</span>], <span class="at">scol=</span>mycol[<span class="dv">2</span>], <span class="at">which.term=</span><span class="dv">2</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotvgam</span>(modelo2, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="dv">12</span>,</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">lcol=</span>mycol[<span class="dv">3</span>], <span class="at">scol=</span>mycol[<span class="dv">3</span>], <span class="at">which.term=</span><span class="dv">3</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotvgam</span>(modelo2, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="dv">12</span>,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">lcol=</span>mycol[<span class="dv">3</span>], <span class="at">scol=</span>mycol[<span class="dv">3</span>], <span class="at">which.term=</span><span class="dv">3</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-23-3.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p><u><strong>Test</strong></u></p>
+<section id="test-modelo-2" class="level3 underline">
+<h3 class="underline anchored" data-anchor-id="test-modelo-2">Test modelo 2</h3>
 <p>La predicción del modelo nos devuelte el valor <em>response</em> o el valor <em>link</em>.</p>
 <p>El valor <em>link</em> compara la probabilidad de elección de cada marca en comparación con la marca de referencia. Es decir, para cada nivel de la variable respuesta la predicción nos indica si es menos probable que la marca de referencia (valor menor a 0), igual de probable (valor igual a 0) o más probable (valor mayor a 0).</p>
 <p>El valor <em>response</em> nos devuelve la probabilidad de elección de cada marca.</p>
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictvglm</span>(modelo2, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"link"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictvglm</span>(modelo2, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictvglm</span>(modelo2, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"link"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictvglm</span>(modelo2, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
@@ -810,23 +851,23 @@ price.private         0.015646453       0.0169181035        0.018077284</code></
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictvglm</span>(modelo2, <span class="at">newdata =</span> train_0, </span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">type =</span> <span class="st">"response"</span>, </span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">se.fit =</span> <span class="cn">FALSE</span>, <span class="at">deriv =</span> <span class="dv">0</span>, <span class="at">dispersion =</span> <span class="cn">NULL</span>,</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">untransform =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictvglm</span>(modelo2, <span class="at">newdata =</span> train_0, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">type =</span> <span class="st">"response"</span>, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">se.fit =</span> <span class="cn">FALSE</span>, <span class="at">deriv =</span> <span class="dv">0</span>, <span class="at">dispersion =</span> <span class="cn">NULL</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">untransform =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>La tasa de acierto es muy baja.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
@@ -863,6 +904,7 @@ Balanced Accuracy           0.538234         0.50000         0.5538        0.554
 </div>
 </div>
 </section>
+</section>
 <section id="modelo-respuesta-múltiple-nominal-medidas-repetidas" class="level2">
 <h2 class="anchored" data-anchor-id="modelo-respuesta-múltiple-nominal-medidas-repetidas">Modelo respuesta múltiple nominal medidas repetidas</h2>
 <p>Hasta el momento no hemos tenido en cuenta en el modelo predictivo que estamos usando información con medidas repetidas, ya que para cada usuario tenemos más de un evento donde ha elegido entre las cuatro marcas.</p>
@@ -873,56 +915,56 @@ Balanced Accuracy           0.538234         0.50000         0.5538        0.554
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>modelo3 <span class="ot">&lt;-</span> <span class="fu">mblogit</span>(<span class="fu">relevel</span>(choice, <span class="at">ref =</span> <span class="st">"private"</span>) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private, </span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> id, </span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="at">control =</span> <span class="fu">mmclogit.control</span>(<span class="at">epsilon =</span> <span class="fl">1e-10</span>,</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">maxit =</span> <span class="dv">50</span>, <span class="at">trace=</span><span class="cn">TRUE</span>, <span class="co"># Intento aumentar número de iteraciones para que converga</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.inner=</span><span class="cn">FALSE</span>,</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">avoid.increase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.increase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.infinite =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.negative =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 1 - deviance = 3827.34 - criterion = 0.759349</span></span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 2 - deviance = 3367.426 - criterion = 0.06472519</span></span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 3 - deviance = 3219.024 - criterion = 0.02117881</span></span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 4 - deviance = 3146.159 - criterion = 0.005016585</span></span>
-<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 5 - deviance = 3117.599 - criterion = 0.0007487687</span></span>
-<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 6 - deviance = 3107.389 - criterion = 1.998695e-05</span></span>
-<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 7 - deviance = 3106.231 - criterion = 7.095098e-07</span></span>
-<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 8 - deviance = 3106.079 - criterion = 2.944966e-13</span></span>
-<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a><span class="do">## converged</span></span>
-<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(modelo3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>modelo3 <span class="ot">&lt;-</span> <span class="fu">mblogit</span>(<span class="fu">relevel</span>(choice, <span class="at">ref =</span> <span class="st">"private"</span>) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> id, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="at">control =</span> <span class="fu">mmclogit.control</span>(<span class="at">epsilon =</span> <span class="fl">1e-10</span>,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">maxit =</span> <span class="dv">50</span>, <span class="at">trace=</span><span class="cn">TRUE</span>, <span class="co"># Intento aumentar número de iteraciones para que converga</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.inner=</span><span class="cn">FALSE</span>,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">avoid.increase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.increase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.infinite =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.negative =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 1 - deviance = 3827.34 - criterion = 0.759349</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 2 - deviance = 3367.426 - criterion = 0.06472519</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 3 - deviance = 3219.024 - criterion = 0.02117881</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 4 - deviance = 3146.159 - criterion = 0.005016585</span></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 5 - deviance = 3117.599 - criterion = 0.0007487687</span></span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 6 - deviance = 3107.389 - criterion = 1.998695e-05</span></span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 7 - deviance = 3106.231 - criterion = 7.095098e-07</span></span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 8 - deviance = 3106.079 - criterion = 2.944966e-13</span></span>
+<span id="cb42-36"><a href="#cb42-36" aria-hidden="true" tabindex="-1"></a><span class="do">## converged</span></span>
+<span id="cb42-37"><a href="#cb42-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-38"><a href="#cb42-38" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(modelo3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo3, test_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> test_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo3, test_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> test_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>El modelo mblogit usa un proceso iterativo para ajustar los parámetros del modelo. El algoritmo busca minimizar o maximizar una función objetivo (verosimilitud del modelo).</p>
@@ -957,12 +999,12 @@ Balanced Accuracy           0.538234         0.50000         0.5538        0.554
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Escalado del conjunto de entrenamiento</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>train_1 <span class="ot">&lt;-</span> train_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">price.sunshine =</span> <span class="fu">scale</span>(price.sunshine),</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.kleebler =</span> <span class="fu">scale</span>(price.kleebler),</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.nabisco =</span> <span class="fu">scale</span>(price.nabisco),</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.private =</span> <span class="fu">scale</span>(price.private))</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Escalado del conjunto de entrenamiento</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>train_1 <span class="ot">&lt;-</span> train_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">price.sunshine =</span> <span class="fu">scale</span>(price.sunshine),</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.kleebler =</span> <span class="fu">scale</span>(price.kleebler),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.nabisco =</span> <span class="fu">scale</span>(price.nabisco),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.private =</span> <span class="fu">scale</span>(price.private))</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       id         disp.sunshine    disp.kleebler     disp.nabisco     disp.private     feat.sunshine    
@@ -992,19 +1034,19 @@ Balanced Accuracy           0.538234         0.50000         0.5538        0.554
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalizado del conjunto de entrenamiento</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>normalizar <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  min_values <span class="ot">&lt;-</span> <span class="fu">min</span>(x)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  max_values <span class="ot">&lt;-</span> <span class="fu">max</span>(x)</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> min_values) <span class="sc">/</span> (max_values <span class="sc">-</span> min_values)</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>train_2 <span class="ot">&lt;-</span> train_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">price.sunshine =</span> <span class="fu">normalizar</span>(price.sunshine),</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.kleebler =</span> <span class="fu">normalizar</span>(price.kleebler),</span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.nabisco =</span> <span class="fu">normalizar</span>(price.nabisco),</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.private =</span> <span class="fu">normalizar</span>(price.private))</span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalizado del conjunto de entrenamiento</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>normalizar <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  min_values <span class="ot">&lt;-</span> <span class="fu">min</span>(x)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  max_values <span class="ot">&lt;-</span> <span class="fu">max</span>(x)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> min_values) <span class="sc">/</span> (max_values <span class="sc">-</span> min_values)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>train_2 <span class="ot">&lt;-</span> train_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">price.sunshine =</span> <span class="fu">normalizar</span>(price.sunshine),</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.kleebler =</span> <span class="fu">normalizar</span>(price.kleebler),</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.nabisco =</span> <span class="fu">normalizar</span>(price.nabisco),</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.private =</span> <span class="fu">normalizar</span>(price.private))</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       id         disp.sunshine    disp.kleebler     disp.nabisco     disp.private     feat.sunshine    
@@ -1033,398 +1075,372 @@ Balanced Accuracy           0.538234         0.50000         0.5538        0.554
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>modelo3_escalado <span class="ot">&lt;-</span> <span class="fu">mblogit</span>(<span class="fu">relevel</span>(choice, <span class="at">ref =</span> <span class="st">"private"</span>) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private, </span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> id, </span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_2,</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="at">control =</span> <span class="fu">mmclogit.control</span>(<span class="at">epsilon =</span> <span class="fl">1e-10</span>,</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">maxit =</span> <span class="dv">50</span>, <span class="at">trace=</span><span class="cn">TRUE</span>, <span class="co"># Intento aumentar número de iteraciones para que converga</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.inner=</span><span class="cn">FALSE</span>,</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">avoid.increase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.increase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.infinite =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.negative =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 1 - deviance = 3827.34 - criterion = 0.759349</span></span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 2 - deviance = 3367.426 - criterion = 0.06472519</span></span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 3 - deviance = 3219.024 - criterion = 0.02117881</span></span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 4 - deviance = 3146.159 - criterion = 0.005016585</span></span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 5 - deviance = 3117.599 - criterion = 0.0007487687</span></span>
-<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 6 - deviance = 3107.389 - criterion = 1.998695e-05</span></span>
-<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 7 - deviance = 3106.231 - criterion = 7.095098e-07</span></span>
-<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 8 - deviance = 3106.079 - criterion = 2.944971e-13</span></span>
-<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a><span class="do">## converged</span></span>
-<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(modelo3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>modelo3_escalado <span class="ot">&lt;-</span> <span class="fu">mblogit</span>(<span class="fu">relevel</span>(choice, <span class="at">ref =</span> <span class="st">"private"</span>) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.nabisco <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private, </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> id, </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_2,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="at">control =</span> <span class="fu">mmclogit.control</span>(<span class="at">epsilon =</span> <span class="fl">1e-10</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">maxit =</span> <span class="dv">50</span>, <span class="at">trace=</span><span class="cn">TRUE</span>, <span class="co"># Intento aumentar número de iteraciones para que converga</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.inner=</span><span class="cn">FALSE</span>,</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">avoid.increase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.increase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.infinite =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.negative =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 1 - deviance = 3827.34 - criterion = 0.759349</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 2 - deviance = 3367.426 - criterion = 0.06472519</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 3 - deviance = 3219.024 - criterion = 0.02117881</span></span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 4 - deviance = 3146.159 - criterion = 0.005016585</span></span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 5 - deviance = 3117.599 - criterion = 0.0007487687</span></span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 6 - deviance = 3107.389 - criterion = 1.998695e-05</span></span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 7 - deviance = 3106.231 - criterion = 7.095098e-07</span></span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 8 - deviance = 3106.079 - criterion = 2.944971e-13</span></span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a><span class="do">## converged</span></span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(modelo3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><u><strong>Test</strong></u></p>
+</section>
+<section id="test-modelo3" class="level3 underline">
+<h3 class="underline anchored" data-anchor-id="test-modelo3">Test modelo3</h3>
 <p>En este caso los resultados del modelo3 y el modelo3_escalado son los mismos y solo cambia el valor de los parámetros.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>test_2 <span class="ot">&lt;-</span> test_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">price.sunshine =</span> <span class="fu">normalizar</span>(price.sunshine),</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.kleebler =</span> <span class="fu">normalizar</span>(price.kleebler),</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.nabisco =</span> <span class="fu">normalizar</span>(price.nabisco),</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.private =</span> <span class="fu">normalizar</span>(price.private))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>test_2 <span class="ot">&lt;-</span> test_0 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">price.sunshine =</span> <span class="fu">normalizar</span>(price.sunshine),</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.kleebler =</span> <span class="fu">normalizar</span>(price.kleebler),</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.nabisco =</span> <span class="fu">normalizar</span>(price.nabisco),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">price.private =</span> <span class="fu">normalizar</span>(price.private))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo3, train_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>pred_escalado <span class="ot">&lt;-</span> </span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo3_escalado, train_2, <span class="at">type=</span><span class="st">"response"</span>)</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>pred_escalado <span class="ot">&lt;-</span> </span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>pred_escalado <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo3, train_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>pred_escalado <span class="ot">&lt;-</span> </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo3_escalado, train_2, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>pred_escalado <span class="ot">&lt;-</span> </span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>pred_escalado <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div>
+<div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Coefficientes =</span> <span class="fu">names</span>(modelo3<span class="sc">$</span>coefficients), <span class="at">modelo3 =</span> modelo3<span class="sc">$</span>coefficients, <span class="at">modelo3_escalado =</span> modelo3_escalado<span class="sc">$</span>coefficients, <span class="at">row.names =</span> <span class="cn">NULL</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Coefficientes    modelo3 modelo3_escalado
+1   sunshine~(Intercept)  1.4352279       -0.1145515
+2   kleebler~(Intercept)  2.6167388       -1.1259952
+3    nabisco~(Intercept)  3.3104297        3.4406663
+4 sunshine~disp.sunshine  0.7322586        0.7322586
+5 kleebler~disp.sunshine  0.4168021        0.4168021
+6  nabisco~disp.sunshine -0.1038300       -0.1038300</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in confusionMatrix.default(data = pred$category, reference = pred$choice): Levels are not in the same
 order for reference and data. Refactoring data to match.</code></pre>
 </div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction sunshine kleebler nabisco private
+  sunshine      111        7      22      15
+  kleebler        6      117      14       4
+  nabisco        59       52    1531      78
+  private        34       27      86     859
+
+Overall Statistics
+                                          
+               Accuracy : 0.8663          
+                 95% CI : (0.8537, 0.8783)
+    No Information Rate : 0.547           
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.7682          
+                                          
+ Mcnemar's Test P-Value : 8.025e-12       
+
+Statistics by Class:
+
+                     Class: sunshine Class: kleebler Class: nabisco Class: private
+Sensitivity                  0.52857         0.57635         0.9262         0.8985
+Specificity                  0.98435         0.99149         0.8619         0.9288
+Pos Pred Value               0.71613         0.82979         0.8901         0.8539
+Neg Pred Value               0.96547         0.97015         0.9063         0.9519
+Prevalence                   0.06949         0.06717         0.5470         0.3163
+Detection Rate               0.03673         0.03872         0.5066         0.2842
+Detection Prevalence         0.05129         0.04666         0.5692         0.3329
+Balanced Accuracy            0.75646         0.78392         0.8941         0.9137</code></pre>
+</div>
+</div>
+<div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred_escalado<span class="sc">$</span>category, <span class="at">reference =</span> pred_escalado<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred_escalado<span class="sc">$</span>category, <span class="at">reference =</span> pred_escalado<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in confusionMatrix.default(data = pred_escalado$category, reference = pred_escalado$choice): Levels
 are not in the same order for reference and data. Refactoring data to match.</code></pre>
 </div>
-<div class="cell quarto-layout-panel">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<pre><code>Confusion Matrix and Statistics
-
-          Reference
-Prediction sunshine kleebler nabisco private
-  sunshine      111        7      22      15
-  kleebler        6      117      14       4
-  nabisco        59       52    1531      78
-  private        34       27      86     859
-
-Overall Statistics
-                                          
-               Accuracy : 0.8663          
-                 95% CI : (0.8537, 0.8783)
-    No Information Rate : 0.547           
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.7682          
-                                          
- Mcnemar's Test P-Value : 8.025e-12       
-
-Statistics by Class:
-
-                     Class: sunshine Class: kleebler Class: nabisco Class: private
-Sensitivity                  0.52857         0.57635         0.9262         0.8985
-Specificity                  0.98435         0.99149         0.8619         0.9288
-Pos Pred Value               0.71613         0.82979         0.8901         0.8539
-Neg Pred Value               0.96547         0.97015         0.9063         0.9519
-Prevalence                   0.06949         0.06717         0.5470         0.3163
-Detection Rate               0.03673         0.03872         0.5066         0.2842
-Detection Prevalence         0.05129         0.04666         0.5692         0.3329
-Balanced Accuracy            0.75646         0.78392         0.8941         0.9137</code></pre>
-</div>
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<pre><code>Confusion Matrix and Statistics
-
-          Reference
-Prediction sunshine kleebler nabisco private
-  sunshine      111        7      22      15
-  kleebler        6      117      14       4
-  nabisco        59       52    1531      78
-  private        34       27      86     859
-
-Overall Statistics
-                                          
-               Accuracy : 0.8663          
-                 95% CI : (0.8537, 0.8783)
-    No Information Rate : 0.547           
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.7682          
-                                          
- Mcnemar's Test P-Value : 8.025e-12       
-
-Statistics by Class:
-
-                     Class: sunshine Class: kleebler Class: nabisco Class: private
-Sensitivity                  0.52857         0.57635         0.9262         0.8985
-Specificity                  0.98435         0.99149         0.8619         0.9288
-Pos Pred Value               0.71613         0.82979         0.8901         0.8539
-Neg Pred Value               0.96547         0.97015         0.9063         0.9519
-Prevalence                   0.06949         0.06717         0.5470         0.3163
-Detection Rate               0.03673         0.03872         0.5066         0.2842
-Detection Prevalence         0.05129         0.04666         0.5692         0.3329
-Balanced Accuracy            0.75646         0.78392         0.8941         0.9137</code></pre>
-</div>
-</div>
-</div>
-</div>
-<p><u><strong>Modelo 4</strong></u></p>
-<p>Eliminamos los siguientes parámetros en orden. El criterio de eliminación es no incluir parámetros no significativos para ninguno de los tres modelos. Tras eliminar un parámetro se vuelve a evaluar el modelo.<br>
-* intercepto<br>
-* price.private<br>
-* feat.nabisco<br>
-* feat.kleebler</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>modelo4 <span class="ot">&lt;-</span> <span class="fu">mblogit</span>(<span class="fu">relevel</span>(choice, <span class="at">ref =</span> <span class="st">"private"</span>) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> disp.kleebler <span class="sc">+</span> disp.nabisco <span class="sc">+</span> disp.private <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">-</span> <span class="dv">1</span>, </span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> id, </span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0,</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="at">control =</span> <span class="fu">mmclogit.control</span>(<span class="at">epsilon =</span> <span class="fl">1e-08</span>,</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">maxit =</span> <span class="dv">10000</span>, <span class="at">trace=</span><span class="cn">FALSE</span>, <span class="co"># Intento aumentar número de iteraciones para que converga</span></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.inner=</span><span class="cn">FALSE</span>,</span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">avoid.increase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.increase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.infinite =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.negative =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
-<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo4)</span>
-<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a><span class="do">## mblogit(formula = relevel(choice, ref = "private") ~ disp.sunshine + </span></span>
-<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a><span class="do">##     disp.kleebler + disp.nabisco + disp.private + feat.sunshine + </span></span>
-<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a><span class="do">##     feat.private + price.sunshine + price.kleebler + price.nabisco - </span></span>
-<span id="cb55-32"><a href="#cb55-32" aria-hidden="true" tabindex="-1"></a><span class="do">##     1, data = train_0, random = ~1 | id, control = mmclogit.control(epsilon = 1e-08, </span></span>
-<span id="cb55-33"><a href="#cb55-33" aria-hidden="true" tabindex="-1"></a><span class="do">##     maxit = 10000, trace = FALSE, trace.inner = FALSE, avoid.increase = FALSE, </span></span>
-<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a><span class="do">##     break.on.increase = FALSE, break.on.infinite = FALSE, break.on.negative = FALSE))</span></span>
-<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Equation for sunshine vs private:</span></span>
-<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a><span class="do">##                 Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
-<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine   0.848565   0.308688   2.749  0.00598 ** </span></span>
-<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler  -0.315798   0.382120  -0.826  0.40856    </span></span>
-<span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco    0.327128   0.220291   1.485  0.13755    </span></span>
-<span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private   -0.791479   0.411085  -1.925  0.05419 .  </span></span>
-<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine   1.367343   0.454446   3.009  0.00262 ** </span></span>
-<span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private   -0.060941   0.509470  -0.120  0.90479    </span></span>
-<span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine -0.044472   0.008506  -5.228 1.71e-07 ***</span></span>
-<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler  0.010567   0.008687   1.216  0.22384    </span></span>
-<span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco   0.012817   0.007953   1.612  0.10705    </span></span>
-<span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a><span class="do">## Equation for kleebler vs private:</span></span>
-<span id="cb55-49"><a href="#cb55-49" aria-hidden="true" tabindex="-1"></a><span class="do">##                 Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
-<span id="cb55-50"><a href="#cb55-50" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine   0.570067   0.391682   1.455  0.14555    </span></span>
-<span id="cb55-51"><a href="#cb55-51" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler   0.911466   0.316471   2.880  0.00398 ** </span></span>
-<span id="cb55-52"><a href="#cb55-52" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco   -0.176087   0.251496  -0.700  0.48383    </span></span>
-<span id="cb55-53"><a href="#cb55-53" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private    0.217571   0.394000   0.552  0.58080    </span></span>
-<span id="cb55-54"><a href="#cb55-54" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine   0.754788   0.728208   1.037  0.29997    </span></span>
-<span id="cb55-55"><a href="#cb55-55" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private   -1.865077   0.682543  -2.733  0.00628 ** </span></span>
-<span id="cb55-56"><a href="#cb55-56" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine  0.012814   0.009497   1.349  0.17726    </span></span>
-<span id="cb55-57"><a href="#cb55-57" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler -0.041532   0.009371  -4.432 9.33e-06 ***</span></span>
-<span id="cb55-58"><a href="#cb55-58" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco   0.016955   0.008468   2.002  0.04525 *  </span></span>
-<span id="cb55-59"><a href="#cb55-59" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb55-60"><a href="#cb55-60" aria-hidden="true" tabindex="-1"></a><span class="do">## Equation for nabisco vs private:</span></span>
-<span id="cb55-61"><a href="#cb55-61" aria-hidden="true" tabindex="-1"></a><span class="do">##                 Estimate Std. Error z value Pr(&gt;|z|)    </span></span>
-<span id="cb55-62"><a href="#cb55-62" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.sunshine   0.159635   0.278335   0.574   0.5663    </span></span>
-<span id="cb55-63"><a href="#cb55-63" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.kleebler   0.470138   0.260458   1.805   0.0711 .  </span></span>
-<span id="cb55-64"><a href="#cb55-64" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.nabisco    0.058274   0.163775   0.356   0.7220    </span></span>
-<span id="cb55-65"><a href="#cb55-65" aria-hidden="true" tabindex="-1"></a><span class="do">## disp.private   -0.362688   0.284399  -1.275   0.2022    </span></span>
-<span id="cb55-66"><a href="#cb55-66" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.sunshine   0.613269   0.489950   1.252   0.2107    </span></span>
-<span id="cb55-67"><a href="#cb55-67" aria-hidden="true" tabindex="-1"></a><span class="do">## feat.private   -1.057208   0.384784  -2.748   0.0060 ** </span></span>
-<span id="cb55-68"><a href="#cb55-68" aria-hidden="true" tabindex="-1"></a><span class="do">## price.sunshine  0.009267   0.006680   1.387   0.1654    </span></span>
-<span id="cb55-69"><a href="#cb55-69" aria-hidden="true" tabindex="-1"></a><span class="do">## price.kleebler  0.042080   0.006541   6.434 1.25e-10 ***</span></span>
-<span id="cb55-70"><a href="#cb55-70" aria-hidden="true" tabindex="-1"></a><span class="do">## price.nabisco  -0.041093   0.005540  -7.418 1.19e-13 ***</span></span>
-<span id="cb55-71"><a href="#cb55-71" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
-<span id="cb55-72"><a href="#cb55-72" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
-<span id="cb55-73"><a href="#cb55-73" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb55-74"><a href="#cb55-74" aria-hidden="true" tabindex="-1"></a><span class="do">## (Co-)Variances:</span></span>
-<span id="cb55-75"><a href="#cb55-75" aria-hidden="true" tabindex="-1"></a><span class="do">## Grouping level: id </span></span>
-<span id="cb55-76"><a href="#cb55-76" aria-hidden="true" tabindex="-1"></a><span class="do">##            Estimate               Std.Err.            </span></span>
-<span id="cb55-77"><a href="#cb55-77" aria-hidden="true" tabindex="-1"></a><span class="do">## sunshine~1  4.251                  8.825              </span></span>
-<span id="cb55-78"><a href="#cb55-78" aria-hidden="true" tabindex="-1"></a><span class="do">## kleebler~1  3.821  6.172           2.506 10.400       </span></span>
-<span id="cb55-79"><a href="#cb55-79" aria-hidden="true" tabindex="-1"></a><span class="do">## nabisco~1   3.898  5.873 11.069   14.233  3.335 20.659</span></span>
-<span id="cb55-80"><a href="#cb55-80" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb55-81"><a href="#cb55-81" aria-hidden="true" tabindex="-1"></a><span class="do">## Approximate residual deviance: 3136 </span></span>
-<span id="cb55-82"><a href="#cb55-82" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Fisher scoring iterations:  7</span></span>
-<span id="cb55-83"><a href="#cb55-83" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of observations</span></span>
-<span id="cb55-84"><a href="#cb55-84" aria-hidden="true" tabindex="-1"></a><span class="do">##   Groups by id: 136</span></span>
-<span id="cb55-85"><a href="#cb55-85" aria-hidden="true" tabindex="-1"></a><span class="do">##   Individual observations:  3022</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, train_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction sunshine kleebler nabisco private
-  sunshine      112        8      23      12
-  kleebler        4      116      16       3
-  nabisco        57       50    1528      73
-  private        37       29      86     868
+  sunshine      111        7      22      15
+  kleebler        6      117      14       4
+  nabisco        59       52    1531      78
+  private        34       27      86     859
 
 Overall Statistics
                                           
-               Accuracy : 0.8683          
-                 95% CI : (0.8557, 0.8802)
+               Accuracy : 0.8663          
+                 95% CI : (0.8537, 0.8783)
     No Information Rate : 0.547           
     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
                                           
-                  Kappa : 0.7719          
+                  Kappa : 0.7682          
                                           
- Mcnemar's Test P-Value : 9.376e-13       
+ Mcnemar's Test P-Value : 8.025e-12       
 
 Statistics by Class:
 
                      Class: sunshine Class: kleebler Class: nabisco Class: private
-Sensitivity                  0.53333         0.57143         0.9244         0.9079
-Specificity                  0.98471         0.99184         0.8685         0.9264
-Pos Pred Value               0.72258         0.83453         0.8946         0.8510
-Neg Pred Value               0.96582         0.96982         0.9049         0.9560
+Sensitivity                  0.52857         0.57635         0.9262         0.8985
+Specificity                  0.98435         0.99149         0.8619         0.9288
+Pos Pred Value               0.71613         0.82979         0.8901         0.8539
+Neg Pred Value               0.96547         0.97015         0.9063         0.9519
 Prevalence                   0.06949         0.06717         0.5470         0.3163
-Detection Rate               0.03706         0.03839         0.5056         0.2872
-Detection Prevalence         0.05129         0.04600         0.5652         0.3375
-Balanced Accuracy            0.75902         0.78163         0.8964         0.9172</code></pre>
+Detection Rate               0.03673         0.03872         0.5066         0.2842
+Detection Prevalence         0.05129         0.04666         0.5692         0.3329
+Balanced Accuracy            0.75646         0.78392         0.8941         0.9137</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-final" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-final">Modelo final</h3>
+<p><u><strong>Modelo 4</strong></u></p>
+<p>Eliminamos los siguientes parámetros en orden. El criterio de eliminación es no incluir parámetros no significativos para ninguno de los tres modelos. Tras eliminar un parámetro se vuelve a evaluar el modelo.<br>
+- intercepto<br>
+- disp.nabisco<br>
+- disp.private<br>
+- disp.kleebler<br>
+- feat.nabisco</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>modelo4 <span class="ot">&lt;-</span> <span class="fu">mblogit</span>(<span class="fu">relevel</span>(choice, <span class="at">ref =</span> <span class="st">"private"</span>) <span class="sc">~</span> disp.sunshine <span class="sc">+</span> feat.sunshine <span class="sc">+</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>feat.kleebler <span class="sc">+</span> feat.private <span class="sc">+</span> price.sunshine <span class="sc">+</span> price.kleebler <span class="sc">+</span> price.nabisco <span class="sc">+</span> price.private <span class="sc">-</span><span class="dv">1</span>, </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> id,</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> train_0,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="at">control =</span> <span class="fu">mmclogit.control</span>(<span class="at">epsilon =</span> <span class="fl">1e-08</span>,</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">maxit =</span> <span class="dv">100</span>, <span class="at">trace=</span><span class="cn">FALSE</span>, <span class="co"># Intento aumentar número de iteraciones para que converga</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.inner=</span><span class="cn">FALSE</span>,</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">avoid.increase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.increase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.infinite =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">break.on.negative =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Inner iterations did not coverge - nlminb message: false convergence (8)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mblogit(formula = relevel(choice, ref = "private") ~ disp.sunshine + 
+    feat.sunshine + feat.kleebler + feat.private + price.sunshine + 
+    price.kleebler + price.nabisco + price.private - 1, data = train_0, 
+    random = ~1 | id, control = mmclogit.control(epsilon = 1e-08, 
+        maxit = 100, trace = FALSE, trace.inner = FALSE, avoid.increase = FALSE, 
+        break.on.increase = FALSE, break.on.infinite = FALSE, 
+        break.on.negative = FALSE))
+
+Equation for sunshine vs private:
+                Estimate Std. Error z value Pr(&gt;|z|)    
+disp.sunshine   0.808576   0.307146   2.633  0.00847 ** 
+feat.sunshine   1.356174   0.452279   2.999  0.00271 ** 
+feat.kleebler   0.346333   0.509514   0.680  0.49667    
+feat.private   -0.320644   0.453303  -0.707  0.47935    
+price.sunshine -0.046123   0.008409  -5.485 4.13e-08 ***
+price.kleebler  0.012609   0.009127   1.382  0.16711    
+price.nabisco   0.004165   0.008274   0.503  0.61472    
+price.private   0.013678   0.009670   1.414  0.15724    
+
+Equation for kleebler vs private:
+                Estimate Std. Error z value Pr(&gt;|z|)    
+disp.sunshine   0.545565   0.392360   1.390  0.16439    
+feat.sunshine   0.626896   0.728686   0.860  0.38962    
+feat.kleebler   1.198798   0.433066   2.768  0.00564 ** 
+feat.private   -1.512692   0.620812  -2.437  0.01482 *  
+price.sunshine  0.013124   0.009834   1.334  0.18205    
+price.kleebler -0.042290   0.009661  -4.377  1.2e-05 ***
+price.nabisco   0.013096   0.008945   1.464  0.14320    
+price.private   0.007691   0.010309   0.746  0.45566    
+
+Equation for nabisco vs private:
+                Estimate Std. Error z value Pr(&gt;|z|)    
+disp.sunshine   0.055114   0.279250   0.197  0.84354    
+feat.sunshine   0.519501   0.486935   1.067  0.28603    
+feat.kleebler   0.484959   0.409317   1.185  0.23610    
+feat.private   -0.987750   0.339204  -2.912  0.00359 ** 
+price.sunshine  0.004824   0.006779   0.712  0.47673    
+price.kleebler  0.038591   0.006689   5.769 7.96e-09 ***
+price.nabisco  -0.045723   0.005863  -7.799 6.23e-15 ***
+price.private   0.020687   0.007095   2.916  0.00355 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Co-)Variances:
+Grouping level: id 
+           Estimate               Std.Err.         
+sunshine~1  4.215                 2.548            
+kleebler~1  3.760  6.089          1.367 3.298      
+nabisco~1   3.896  5.782 10.961   4.319 3.233 8.270
+
+Approximate residual deviance: 3142 
+Number of Fisher scoring iterations:  8
+Number of observations
+  Groups by id: 136
+  Individual observations:  3022</code></pre>
 </div>
 </div>
 <p><u><strong>Test</strong></u></p>
-<p>La predicción del modelo nos devuelte el valor <em>response</em> o el valor <em>link</em>.</p>
-<p>El valor <em>link</em> compara la probabilidad de elección de cada marca en comparación con la marca de referencia. Es decir, para cada nivel de la variable respuesta la predicción nos indica si es menos probable que la marca de referencia (valor menor a 0), igual de probable (valor igual a 0) o más probable (valor mayor a 0).</p>
-<p>El valor <em>response</em> nos devuelve la probabilidad de elección de cada marca.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, test_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
-<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> test_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, train_0, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> </span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"category"</span>, <span class="at">cols =</span> <span class="fu">c</span>(sunshine,kleebler,nabisco,private)) <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(value, <span class="at">n=</span><span class="dv">1</span>, <span class="at">by =</span> (id)),</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="at">choice =</span> train_0<span class="sc">$</span>choice) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category=</span><span class="fu">as.factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="at">data=</span>pred<span class="sc">$</span>category, <span class="at">reference =</span> pred<span class="sc">$</span>choice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction sunshine kleebler nabisco private
-  sunshine       13        1       2       0
-  kleebler        2        9       2       0
-  nabisco         9        7     124       9
-  private         5        6       8      70
+  sunshine      112       10      26      11
+  kleebler        5      113      14       3
+  nabisco        57       51    1525      86
+  private        36       29      88     856
 
 Overall Statistics
                                           
-               Accuracy : 0.809           
-                 95% CI : (0.7566, 0.8543)
-    No Information Rate : 0.5094          
+               Accuracy : 0.8623          
+                 95% CI : (0.8495, 0.8744)
+    No Information Rate : 0.547           
     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
                                           
-                  Kappa : 0.685           
+                  Kappa : 0.7613          
                                           
- Mcnemar's Test P-Value : 0.004847        
+ Mcnemar's Test P-Value : 7.368e-13       
 
 Statistics by Class:
 
                      Class: sunshine Class: kleebler Class: nabisco Class: private
-Sensitivity                  0.44828         0.39130         0.9118         0.8861
-Specificity                  0.98739         0.98361         0.8092         0.8989
-Pos Pred Value               0.81250         0.69231         0.8322         0.7865
-Neg Pred Value               0.93625         0.94488         0.8983         0.9494
-Prevalence                   0.10861         0.08614         0.5094         0.2959
-Detection Rate               0.04869         0.03371         0.4644         0.2622
-Detection Prevalence         0.05993         0.04869         0.5581         0.3333
-Balanced Accuracy            0.71784         0.68746         0.8605         0.8925</code></pre>
+Sensitivity                  0.53333         0.55665         0.9226         0.8954
+Specificity                  0.98329         0.99220         0.8583         0.9259
+Pos Pred Value               0.70440         0.83704         0.8871         0.8484
+Neg Pred Value               0.96577         0.96883         0.9018         0.9503
+Prevalence                   0.06949         0.06717         0.5470         0.3163
+Detection Rate               0.03706         0.03739         0.5046         0.2833
+Detection Prevalence         0.05261         0.04467         0.5688         0.3339
+Balanced Accuracy            0.75831         0.77442         0.8904         0.9107</code></pre>
 </div>
 </div>
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"link"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"link"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo4, <span class="at">newdata =</span> test_0, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <pre><code>       sunshine   kleebler    nabisco
-[1,] -0.1799068 -0.9093118  4.5590339
-[2,]  1.9009926  0.4308961  1.0861985
-[3,] -2.2672180 -3.8033678  0.4313813
-[4,] -5.1833371 -5.6373249 -4.0050226
-[5,] -5.2996551 -5.5549252 -3.7437176
-[6,] -0.6492229  2.5040190  1.6066597</code></pre>
+[1,]  0.2067485 -0.7715249  4.7925842
+[2,]  1.6821171  0.4631781  0.9110492
+[3,] -1.9737616 -3.7712491  0.9287132
+[4,] -5.1317332 -5.5248663 -4.0384621
+[5,] -5.1443102 -5.3888061 -3.6987807
+[6,] -0.4172986  2.2745910  1.6602874</code></pre>
 </div>
 <div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<pre><code>        private    sunshine    kleebler    nabisco
-[1,] 0.01023234 0.008547568 0.004121602 0.97709849
-[2,] 0.08200648 0.548831157 0.126178097 0.24298427
-[3,] 0.37519539 0.038870241 0.008365191 0.57756918
-[4,] 0.97333498 0.005459686 0.003467394 0.01773794
-[5,] 0.96849708 0.004836012 0.003746493 0.02292041
-[6,] 0.05336141 0.027878755 0.652692993 0.26606684</code></pre>
+<pre><code>         private    sunshine    kleebler    nabisco
+[1,] 0.008109995 0.009972645 0.003749312 0.97816805
+[2,] 0.095666551 0.514392102 0.152025276 0.23791607
+[3,] 0.270767436 0.037618602 0.006233957 0.68538001
+[4,] 0.973219650 0.005748141 0.003879644 0.01715256
+[5,] 0.966040200 0.005634426 0.004412314 0.02391306
+[6,] 0.060083199 0.039584262 0.584245484 0.31608706</code></pre>
 </div>
 </div>
 </div>
 </div>
-<p><span class="math inline">\(\exp(-0.2839232)\)</span> = 0.7528245<br>
-<span class="math inline">\(\frac{0.007711103}{0.01024290}\)</span> = 0.7528242</p>
+<p><span class="math inline">\(\exp(0.2067485)\)</span> = 1.2296733<br>
+<span class="math inline">\(\frac{0.009972645}{0.008109995}\)</span> = 1.2296734</p>
+</section>
+<section id="comparación-de-modelos" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-de-modelos">Comparación de modelos</h3>
 </section>
 </section>
 </section>
