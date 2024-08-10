@@ -1,0 +1,649 @@
+---
+title: "Choice of Brand for Crackers"
+author: "Mario Camacho"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+format:
+  html:
+    toc: TRUE
+    toc-location: left
+    toc-title: Índice
+    toc-expand: TRUE
+    css: styles.css
+editor: visual
+page-layout: full
+knitr:
+  opts_chunk: 
+    R.options:
+      width: 110
+code-fold: true
+---
+
+```{css echo=FALSE}
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f7f6;
+}
+
+/* Encabezados */
+h1, h2, h3 {
+    color: #2E86C1;
+    border-bottom: 2px solid #AED6F1;
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.75em;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+}
+
+table, th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #2E86C1;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Código */
+pre, code {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    color: #343a40;
+    border-radius: 5px;
+}
+
+/* Índice interactivo */
+nav#TOC a {
+    text-decoration: none;
+    color: #1A5276;
+}
+
+nav#TOC a:hover {
+    font-weight: bold;
+    color: #154360;
+}
+
+nav#TOC a.active {
+    font-weight: bold;
+    color: #1A5276;
+}
+
+/* Botones de interacción (opcional) */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #2E86C1;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+}
+
+.btn:hover {background-color: #3A98D8}
+
+.btn:active {
+    background-color: #3A98D8;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+```
+
+```{r}
+#| output: false
+library(tidyverse)
+library(Ecdat)
+library(rpivotTable)
+library(VGAM)
+library(mclogit)
+library(car)
+```
+
+# Database
+
+## Descripción
+
+En este caso de uso utilizamos la base de datos Cracker del paquete Ecdat sobre la elección de un individuo de una marca de galletas saladas entre cuatro opciones posibles. (Sunshine, Kleebler, Nabisco y Private)
+
+La base de datos contiene 3.292 registros y dentro de cada fila tenemos:
+
+-   **id**: individuals identifiers\
+-   **choice**: one of sunshine, kleebler, nabisco, private\
+-   **disp.z**: is there a display for brand z ?\
+-   **feat.z**: is there a newspaper feature advertisement for brand z ?\
+-   **price.z**: price of brand z
+
+```{r}
+summary(Cracker)
+```
+
+## Datos por individuo
+
+Se han recogido datos de 136 individuos. Cada individuo tiene de media 21 registros.
+
+```{r}
+Cracker |> select(id) |> table() |> as.data.frame() |> select(Freq) |> summary()
+```
+
+Tomamos de ejemplo algunos de los registros del id 1.
+
+```{r}
+Cracker |> filter(id==1) |> head(5)
+```
+
+## Distribución de las preferencias
+
+Para cada usuario contamos el número de veces que ha elegido cada una de las marcas.
+
+```{r}
+data_0 <- 
+Cracker |> select(id, choice) |> group_by_all() |> count(,.drop = FALSE)  |> ungroup() |> mutate(p = n/sum(n), .by=id) |> 
+  #mutate(scale = scale(p, scale = FALSE), .by=id) |> 
+  arrange(id,-n) |> mutate(preference = row_number(), .by=id)
+```
+
+El individuo 1 ha elegido la marca Nabisco en el 87.5 % de las veces.
+
+```{r}
+#| echo: false
+data_0 |> head(8)
+```
+
+La distribución de la preferencia de cada marca:
+
+```{r}
+#| layout-ncol: 3
+data_0 |> select(choice, preference) |> table() |> addmargins()
+round(
+  data_0 |> select(choice, preference) |> table() |> prop.table(1)*100, 2
+) |> addmargins()
+```
+
+## Escala
+
+Creamos una escala teniendo en cuenta las preferencias del individuo e incluyendo el porcentaje de veces que elige cada una de las marcas sobre el total de sus elecciones.
+
+```{r}
+data_1 <- 
+data_0 |> mutate(scale = scale(p, scale = FALSE), .by=id)
+```
+
+Esta escala tiene una relación directa con la proporción de cada una de las elecciones. Se mueve entre los valores -0.25 y 0.75.
+
+-   El valor -0.25 si esa marca nunca ha sido elegida por el individuo (p=0).
+-   El valor 0.75 si es la única marca elegida por el usuario (p=1).
+
+```{r}
+data_1 |> select(choice, p, scale) |> summary()
+```
+
+Si las elecciones fueran fruto del azar, cada marca sería elegida un 25 % por cada individuo. Con la escala creado cuantificamos cuánto se desvía la proporción de cada elección sobre este porcentaje esperado.
+
+```{r}
+data_1 |> filter(id==1)
+```
+
+Los individuos 7 y 123 han hecho un total de 17 elecciones siendo su marca preferida Nabisco.
+
+```{r}
+data_1 |> filter(id %in% c(7,123))
+```
+
+# Análisis exploratorio
+
+## Eliminación datos confusos
+
+Existen tres registros donde el precio de la marca Nabisco es cero. Puede deberse a alguna oferta que no tengamos recogida o error en los datos. Eliminamos estos registros
+
+```{r}
+#| echo: fenced
+Cracker |> filter(price.nabisco==0) |> select(c(contains('nabisco'),'choice'))
+Cracker_clean <- Cracker |> filter(price.nabisco>0) 
+```
+
+## Distribución del precio
+
+```{r}
+summary(Cracker_clean |> select(contains('price')))
+```
+
+Definimos el precio de la marca elegida por el usuario y lo enfrentamos al precio medio de las elecciones que tenía el individuo.
+
+```{r}
+data_2 <- Cracker_clean |> mutate(precio_medio = (price.sunshine + price.kleebler + price.nabisco + price.private) / 4,
+                                         precio_preferencia = case_when(choice == "sunshine" ~ price.sunshine,
+                                                                        choice == "kleebler" ~ price.kleebler,
+                                                                        choice == "nabisco" ~ price.nabisco,
+                                                                        choice == "private" ~ price.private),
+                                         id=factor(id))
+                                         # |>
+  #select(precio_preferencia, precio_medio, id, choice)
+```
+
+La marca Private casi siempre tiene un precio superior al precio medio de las cuatro marcas cuando es la marca que el individuo prefiere. Aquellos casos donde la marca elegida es la marca Nabisco, el precio de esta elección casi siempre es inferior al precio medio de las cuatro marcas.
+
+```{r}
+#| warning: false
+#| out-width: 80%
+data_2 |> ggplot() + geom_point(aes(x=precio_preferencia, y=precio_medio, colour = factor(choice))) + 
+  geom_abline(intercept = 0) + xlim(30, 150) + ylim(30, 150) +
+  xlab("Precio de la marca escogida (choice)") + 
+  ylab("Precio medio de las cuatro marcas")+
+  labs(colour="choice")
+```
+
+# Modelo predictivo
+
+## Objetivo
+
+Queremos predecir la preferencia de un individuo entre cuatro posibles marcas de galletas saladas en función de las características de venta de cada una de las marcas.
+
+## Enfoque del modelo
+
+La variable respuesta es la variable *choice*. Una variable nominal con cuatro categorías que identifica la marca preferida de cada individuo.
+
+Tenemos dos variables dicotómicas para cada marca. La variable *display* indica si la marca tenía un display o no. Y la variable *feat* indica si había un anuncio en el periódico o no.
+
+También la variable continua *price* sobre el precio de la marca.
+
+## Train y test
+
+Separamos mediante un muestreo estratificado (estrato: usuario) el 10 % de los datos para testear el modelo.
+
+```{r}
+set.seed(1234)
+Cracker_clean <- Cracker_clean |> mutate(r=row_number())
+test_0 <- Cracker_clean |>
+  slice_sample(prop = 0.10, by = c(id))
+train_0 <- anti_join(Cracker_clean, test_0, by='r') |> select(-r)
+```
+
+
+## Modelo respuesta múltiple nominal
+
+Usamos la librería VGAM para un modelo repuesta múltiple nominal.
+
+Previamente debemos elegir una categoría de referencia. El resultado del modelo indicará cómo de probable es la elección de cada una de las tres marcas en relación a la categoría de referencia para cada individuo en función.
+
+*Se elige como referencia el nivel "Private".*
+
+
+[**Modelo 1**]{.underline}
+
+Modelo saturado.
+
+```{r}
+#| collapse: true
+modelo1 <- vglm((choice) ~ disp.sunshine + disp.kleebler + disp.nabisco + disp.private + feat.sunshine +
+feat.kleebler + feat.nabisco + feat.private + price.sunshine + price.kleebler + price.nabisco + price.private,
+family=multinomial(refLevel='private'),
+                data = train_0)
+summary(modelo1)
+```
+
+[**Modelo 2**]{.underline}
+
+Sin las variables disp.sunshine y feat.sunshine, ya que son las únicas variables no significativas para las tres marcas. ("los tres modelos")
+
+```{r}
+#| collapse: true
+modelo2 <- vglm((choice) ~ disp.kleebler + disp.nabisco + disp.private +
+                  feat.kleebler + feat.nabisco + feat.private + price.sunshine + price.kleebler + price.nabisco + price.private,
+                family=multinomial(refLevel='private'),
+                data = train_0)
+summary(modelo2)
+```
+
+[**Coeficientes modelo 2**]{.underline}
+
+No existen más variables que no sean significativas a la hora de comparar la probabilidad de preferencias de cada una de las tres marcas contra la marca de referencia.
+
+```{r}
+coef(modelo2, matrix = TRUE)
+```
+
+```{r}
+#| out-width: 100%
+mycol <- c("red","darkgreen","blue")
+
+par(mfrow=c(1,3))
+plotvgam(modelo2, se=TRUE, scale=12,
+         lcol=mycol[1], scol=mycol[1], which.term=1, ylim = c(-1, 1))
+plotvgam(modelo2, se=TRUE, scale=12,
+         lcol=mycol[2], scol=mycol[2], which.term=2, ylim = c(-1, 1))
+plotvgam(modelo2, se=TRUE, scale=12,
+         lcol=mycol[3], scol=mycol[3], which.term=3, ylim = c(-1, 1))
+```
+
+
+[**Test**]{.underline}
+
+La predicción del modelo nos devuelte el valor *response* o el valor *link*.
+
+El valor *link* compara la probabilidad de elección de cada marca en comparación con la marca de referencia. Es decir, para cada nivel de la variable respuesta la predicción nos indica si es menos probable que la marca de referencia (valor menor a 0), igual de probable (valor igual a 0) o más probable (valor mayor a 0).
+
+El valor *response* nos devuelve la probabilidad de elección de cada marca.
+
+```{r}
+#| layout-ncol: 2
+predictvglm(modelo2, newdata = test_0, type = "link") |> head()
+predictvglm(modelo2, newdata = test_0, type = "response") |> head()
+```
+En el primer caso, como log(mu[,1]/mu[,4]) es menor a 0, sabemos que la probabilidad de que el usuario escoja la marca sunshine es menor que la probabilidad de escoger la marca private.
+$\exp(-2.9901208)$ = `r exp(-2.9901208)`  
+$\frac{0.01433895}{0.2851743}$ = `r 0.01433895 / 0.2851743`
+
+
+```{r}
+pred <- 
+predictvglm(modelo2, newdata = train_0, 
+             type = "response", 
+             se.fit = FALSE, deriv = 0, dispersion = NULL,
+             untransform = FALSE)
+
+pred <- 
+cbind(
+pred |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
+choice = train_0$choice) |> mutate(category=as.factor(category))
+```
+
+La tasa de acierto es muy baja.
+
+```{r}
+#| warning: false
+caret::confusionMatrix(data=pred$category, reference = pred$choice)
+```
+
+
+## Modelo respuesta múltiple nominal medidas repetidas
+
+Hasta el momento no hemos tenido en cuenta en el modelo predictivo que estamos usando información con medidas repetidas, ya que para cada usuario tenemos más de un evento donde ha elegido entre las cuatro marcas.
+
+El modelo saturado inicial cuenta con una parte aleatoria.  
+* Pendiente aleatoria. Nos dará información sobre si cada
+
+
+[**Modelo 3**]{.underline}
+
+Modelo saturado.
+
+```{r}
+#| collapse: true
+modelo3 <- mblogit(relevel(choice, ref = "private") ~ disp.sunshine + disp.kleebler + disp.nabisco + disp.private + feat.sunshine +
+feat.kleebler + feat.nabisco + feat.private + price.sunshine + price.kleebler + price.nabisco + price.private, 
+                random = ~ 1 | id, 
+                data = train_0,
+control = mmclogit.control(epsilon = 1e-10,
+                 maxit = 50, trace=TRUE, # Intento aumentar número de iteraciones para que converga
+                 trace.inner=FALSE,
+                 avoid.increase = FALSE,
+                 break.on.increase = FALSE,
+                 break.on.infinite = FALSE,
+                 break.on.negative = FALSE))
+
+#summary(modelo3)
+```
+
+```{r}
+pred <- 
+predict(modelo3, test_0, type="response")
+
+pred <- 
+cbind(
+pred |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
+choice = test_0$choice) |> mutate(category=as.factor(category))
+```
+
+
+El modelo mblogit usa un proceso iterativo para ajustar los parámetros del modelo. El algoritmo busca minimizar o maximizar una función objetivo (verosimilitud del modelo).
+
+La convergencia se alcanza en el punto donde los cambios en los parámetros de una iteración a la siguiente son lo suficientemente pequeños como para considerar que el proceso ha encontrado una solución óptima.
+
+Podemos tener casos donde el algortimo nos advierte de que no ha encontrado esta convergencia. Posibles causas:
+
+- **Multicolinealidad.** Una alta correlación entre las variables independientes puede hacer que el modelo tenga dificultades para encontrar una solución estable.
+
+- **Datos desbalanceados.** Si los datos están muy desbalanceados puede provocar que el modelo tenga problemas para converger.
+
+- **Valores atípicos.** El ruido en los datos pueden interferir con el proceso de convergencia.
+
+- **Modelo demasiado complejo.** Un modelo demasiado complejo o mal especificado puede dificultar la convergencia.
+
+- **Escalado de variables.** Variables en escalas muy diferentes pueden causar problemas de convergencia.
+
+En este punto tenemos tres posibles formas de resolver el problema:
+
+- Verificar la multicolinealidad. Usar el VIF para verificar si las variables independientes están correlacionadas.
+- Escalar las variables. Tenemos variables dicotómicas y variables contínuas de precio.
+- Aumenta el número de iteraciones o ajusta la tolerancia. (En realidad hemos bajado el número de iteraciones en el modelo3 para encontrarnos con este problema)
+
+### VIF
+
+El VIF está basado en la suposición de un modelo lineal.
+
+Cuando la variable respuesta es categórica, no podemos calcular directamente el VIF. Sin embargo, podemos evaluar la multicolinealidad entre las variables independientes antes de ajustar el modelo usando un modelo lineal auxiliar donde se trata una de las variables independientes como la variable respuesta.
+
+1. Ignoramos la variable categórica respuesta. La multicolinealidad es un problema que afecta a las relaciones entre las variables independientes. La variable respuesta categórica no influye en la multicolinealidad entre las predictoras.
+2. Ajustamos un modelo de regresión lineal donde cada una de las variables independientes es la variable dependiente del modelo lineal.
+3. Calcular el VIF para cada variable independiente.
+
+```{r}
+#| include: false
+
+vif_values1 <- vif(lm(price.sunshine ~ ., data = train_0 |> select(-c(id,choice))))
+vif_values2 <- vif(lm(price.nabisco ~ ., data = train_0 |> select(-c(id,choice))))
+vif_values3 <- vif(lm(price.private ~ ., data = train_0 |> select(-c(id,choice))))
+vif_values4 <- vif(lm(price.kleebler ~ ., data = train_0 |> select(-c(id,choice))))
+
+# Una manera más estructurada de ver los VIF
+#vif_dataframe <- data.frame(Variable = names(vif_values), VIF = vif_values) |> arrange(-VIF)
+vif_dataframe <- rbind(
+  data.frame(target = "price.sunshine", Variable = names(vif_values1), VIF = vif_values1),
+  data.frame(target = "price.nabisco", Variable = names(vif_values2), VIF = vif_values2),
+  data.frame(target = "price.private", Variable = names(vif_values3), VIF = vif_values3),
+  data.frame(target = "price.kleebler", Variable = names(vif_values4), VIF = vif_values4)) |> arrange(-VIF)
+
+rownames(vif_dataframe) = NULL
+vif_dataframe |> head(10)
+```
+
+### Escalado de variables
+
+Escalado:
+
+```{r}
+# Escalado del conjunto de entrenamiento
+train_1 <- train_0 |> mutate(price.sunshine = scale(price.sunshine),
+                             price.kleebler = scale(price.kleebler),
+                             price.nabisco = scale(price.nabisco),
+                             price.private = scale(price.private))
+summary(train_1)
+```
+
+Normalización:
+
+```{r}
+# Normalizado del conjunto de entrenamiento
+
+normalizar <- function(x) {
+  min_values <- min(x)
+  max_values <- max(x)
+  (x - min_values) / (max_values - min_values)
+}
+
+train_2 <- train_0 |> mutate(price.sunshine = normalizar(price.sunshine),
+                             price.kleebler = normalizar(price.kleebler),
+                             price.nabisco = normalizar(price.nabisco),
+                             price.private = normalizar(price.private))
+summary(train_2)
+```
+
+
+```{r}
+#| collapse: true
+modelo3_escalado <- mblogit(relevel(choice, ref = "private") ~ disp.sunshine + disp.kleebler + disp.nabisco + disp.private + feat.sunshine +
+feat.kleebler + feat.nabisco + feat.private + price.sunshine + price.kleebler + price.nabisco + price.private, 
+                random = ~ 1 | id, 
+                data = train_2,
+control = mmclogit.control(epsilon = 1e-10,
+                 maxit = 50, trace=TRUE, # Intento aumentar número de iteraciones para que converga
+                 trace.inner=FALSE,
+                 avoid.increase = FALSE,
+                 break.on.increase = FALSE,
+                 break.on.infinite = FALSE,
+                 break.on.negative = FALSE))
+
+#summary(modelo3)
+```
+
+
+[**Test**]{.underline}
+
+En este caso los resultados del modelo3 y el modelo3_escalado son los mismos y solo cambia el valor de los parámetros.
+
+```{r}
+test_2 <- test_0 |> mutate(price.sunshine = normalizar(price.sunshine),
+                             price.kleebler = normalizar(price.kleebler),
+                             price.nabisco = normalizar(price.nabisco),
+                             price.private = normalizar(price.private))
+```
+
+```{r}
+pred <- 
+predict(modelo3, train_0, type="response")
+
+pred <- 
+cbind(
+pred |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
+choice = train_0$choice) |> mutate(category=as.factor(category))
+
+pred_escalado <- 
+predict(modelo3_escalado, train_2, type="response")
+
+pred_escalado <- 
+cbind(
+pred_escalado |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
+choice = train_0$choice) |> mutate(category=as.factor(category))
+```
+
+```{r}
+#| layout-ncol: 2
+caret::confusionMatrix(data=pred$category, reference = pred$choice)
+caret::confusionMatrix(data=pred_escalado$category, reference = pred_escalado$choice)
+```
+
+
+[**Modelo 4**]{.underline}
+
+Eliminamos los siguientes parámetros en orden. El criterio de eliminación es no incluir parámetros no significativos para ninguno de los tres modelos. Tras eliminar un parámetro se vuelve a evaluar el modelo.  
+* intercepto  
+* price.private  
+* feat.nabisco  
+* feat.kleebler  
+ 
+
+```{r}
+#| collapse: true
+modelo4 <- mblogit(relevel(choice, ref = "private") ~ disp.sunshine + disp.kleebler + disp.nabisco + disp.private + feat.sunshine +
+feat.private + price.sunshine + price.kleebler + price.nabisco - 1, 
+                random = ~ 1 | id, 
+                data = train_0,
+control = mmclogit.control(epsilon = 1e-08,
+                 maxit = 10000, trace=FALSE, # Intento aumentar número de iteraciones para que converga
+                 trace.inner=FALSE,
+                 avoid.increase = FALSE,
+                 break.on.increase = FALSE,
+                 break.on.infinite = FALSE,
+                 break.on.negative = FALSE))
+
+summary(modelo4)
+```
+
+
+```{r}
+pred <- 
+predict(modelo4, train_0, type="response")
+
+pred <- 
+cbind(
+pred |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
+choice = train_0$choice) |> mutate(category=as.factor(category))
+```
+
+
+```{r}
+#| warning: false
+caret::confusionMatrix(data=pred$category, reference = pred$choice)
+```
+
+[**Test**]{.underline}
+
+La predicción del modelo nos devuelte el valor *response* o el valor *link*.
+
+El valor *link* compara la probabilidad de elección de cada marca en comparación con la marca de referencia. Es decir, para cada nivel de la variable respuesta la predicción nos indica si es menos probable que la marca de referencia (valor menor a 0), igual de probable (valor igual a 0) o más probable (valor mayor a 0).
+
+El valor *response* nos devuelve la probabilidad de elección de cada marca.
+
+
+```{r}
+pred <- 
+predict(modelo4, test_0, type="response")
+
+pred <- 
+cbind(
+pred |> as.data.frame() |> mutate(id=row_number()) |>  pivot_longer(names_to = "category", cols = c(sunshine,kleebler,nabisco,private)) |> slice_max(value, n=1, by = (id)),
+choice = test_0$choice) |> mutate(category=as.factor(category))
+```
+
+```{r}
+#| warning: false
+caret::confusionMatrix(data=pred$category, reference = pred$choice)
+```
+
+```{r}
+#| layout-ncol: 2
+predict(modelo4, newdata = test_0, type = "link") |> head()
+predict(modelo4, newdata = test_0, type = "response") |> head()
+```
+$\exp(-0.2839232)$ = `r exp(-0.2839232)`  
+$\frac{0.007711103}{0.01024290}$ = `r 0.007711103 / 0.01024290`
+
+
+# Bibliografía
+
+https://www.jstor.org/stable/1392088  
+https://www.jstatsoft.org/article/view/v032i10
+
