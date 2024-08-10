@@ -4,13 +4,15 @@
 
 A través de la base de datos [Cracker](https://rdrr.io/cran/Ecdat/man/Cracker.html) indagamos en los modelos de respuesta múltiple nominal, incluyendo también la metodología de un modelo de efectos aleatorios y fijos.
 
+## Publicación
+[Choice of Brand for Crackers](https://marioc0093.github.io/modelos-respuesta-multiple-nominal/)
 
 ## 🔨 Built With
 
 * [![R Studio][RStudio.js]][RStudio-url]
 
 
-## Topics
+## 📚 Topics
 
 * Modelos de respuesta múltiple nominal
 * Modelos aleatorios
