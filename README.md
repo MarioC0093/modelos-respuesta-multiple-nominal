@@ -10,8 +10,13 @@ A través de la base de datos [Cracker](https://rdrr.io/cran/Ecdat/man/Cracker.h
 * [![R Studio][RStudio.js]][RStudio-url]
 
 
+## Topics
 
-<!-- CONTACT -->
+* Modelos de respuesta múltiple nominal
+* Modelos aleatorios
+* Convergencia
+
+
 ## 💌 Contacto ⤵️
 
 <p align="left">
@@ -26,19 +31,11 @@ A través de la base de datos [Cracker](https://rdrr.io/cran/Ecdat/man/Cracker.h
 </p>
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Topics
-
-* Modelos de respuesta múltiple nominal
-* Modelos aleatorios
-* Convergencia
-
 
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [linkedin-url]: https://linkedin.com/in/mario-camacho-b98462ab
-[product-screenshot]: images/screenshot.png
 [RStudio.js]: https://img.shields.io/badge/R%20Studio-000000?style=for-the-badge&logo=R&color=blue
 [RStudio-url]: https://posit.co/download/rstudio-desktop/
