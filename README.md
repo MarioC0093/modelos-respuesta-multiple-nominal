@@ -32,6 +32,8 @@ A través de la base de datos [Cracker](https://rdrr.io/cran/Ecdat/man/Cracker.h
   <img src="https://img.shields.io/badge/-Google Maps-brightgreen?style=flat-square&labelColor=white&logo=googlemaps&labelColor=white" alt="Maps"/></a>
 </p>
 
+[![GitHub](https://img.shields.io/github/followers/MarioC0093?label=follow&style=social)](https://github.com/MarioC0093)
+
 
 
 
