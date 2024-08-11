@@ -18,6 +18,7 @@ knitr:
     R.options:
       width: 110
 code-fold: true
+warning: false
 ---
 
 ```{css echo=FALSE}
@@ -157,11 +158,6 @@ La base de datos contiene 3.292 registros y dentro de cada fila tenemos:
 summary(Cracker)
 ```
 
-```{r}
-paleta_choice <- c("lightsalmon", "darkolivegreen3", "lightblue", "mediumorchid")
-```
-
-
 ## Datos por individuo
 
 Se han recogido datos de 136 individuos. Cada individuo tiene de media 21 registros.
@@ -236,6 +232,10 @@ data_1 |> filter(id %in% c(7,123))
 
 # Análisis exploratorio
 
+```{r}
+paleta_choice <- c("lightsalmon", "darkolivegreen3", "lightblue", "mediumorchid")
+```
+
 ## Eliminación datos confusos
 
 Existen tres registros donde el precio de la marca Nabisco es cero. Puede deberse a alguna oferta que no tengamos recogida o error en los datos. Eliminamos estos registros
@@ -268,7 +268,6 @@ data_2 <- Cracker_clean |> mutate(precio_medio = (price.sunshine + price.kleeble
 La marca Private casi siempre tiene un precio superior al precio medio de las cuatro marcas cuando es la marca que el individuo prefiere. Aquellos casos donde la marca elegida es la marca Nabisco, el precio de esta elección casi siempre es inferior al precio medio de las cuatro marcas.
 
 ```{r}
-#| warning: false
 #| out-width: 80%
 data_2 |> ggplot() + geom_point(aes(x=precio_preferencia, y=precio_medio, colour = factor(choice))) + 
   geom_abline(intercept = 0) + xlim(30, 150) + ylim(30, 150) +
@@ -277,10 +276,10 @@ data_2 |> ggplot() + geom_point(aes(x=precio_preferencia, y=precio_medio, colour
   scale_color_manual(values = paleta_choice) +
   labs(colour="choice")
 ```
+
 Tenemos la distribución del precio para cada una de las marcas y marcamos la media del precio de cada una de ellas. Las marcas Sunshine y Klebbe son bimodales.
 
 ```{r}
-#| warning: false
 #| out-width: 80%
 Cracker_clean |> select(contains("price")) |> head() |> pivot_longer(cols = c(price.sunshine,price.kleebler ,price.nabisco ,price.private), names_to = "Marca", values_to = "Precio") |> ggplot(aes(x = Precio, y = Marca, fill=Marca)) +
   geom_density_ridges(quantile_lines=TRUE, quantile_fun=function(Precio,...)mean(Precio),
@@ -297,7 +296,6 @@ Cracker_clean |> select(contains("price")) |> head() |> pivot_longer(cols = c(pr
        title = "Density Ridges del precio",
        subtitle = "se incluyen las medianas")
 ```
-
 
 # Modelo predictivo
 
@@ -413,7 +411,6 @@ choice = train_0$choice) |> mutate(category=as.factor(category))
 La tasa de acierto es muy baja.
 
 ```{r}
-#| warning: false
 caret::confusionMatrix(data=pred$category, reference = pred$choice)
 ```
 
@@ -421,8 +418,7 @@ caret::confusionMatrix(data=pred$category, reference = pred$choice)
 
 Hasta el momento no hemos tenido en cuenta en el modelo predictivo que estamos usando información con medidas repetidas, ya que para cada usuario tenemos más de un evento donde ha elegido entre las cuatro marcas.
 
-El modelo saturado inicial cuenta con una parte aleatoria.\
-\* Pendiente aleatoria. Nos dará información sobre si cada
+El modelo saturado inicial cuenta con una parte aleatoria. \* Intersección aleatorioa. Cada usuario tiene su valor base en la relación entre la variable respuesta y las variables independientes. \* Pendiente aleatoria. La relación entre cada una de las variables dependientes y la variable independiente será diferente para cada usuario. La relación entre cada variable dependiente y la dependiente puede ser diferente para cada usuario.
 
 [**Modelo 3**]{.underline}
 
@@ -509,7 +505,7 @@ vif_dataframe |> head(10)
 
 ### Escalado de variables
 
-Escalado:
+[**Escalado:**]{.underline}
 
 ```{r}
 # Escalado del conjunto de entrenamiento
@@ -520,7 +516,7 @@ train_1 <- train_0 |> mutate(price.sunshine = scale(price.sunshine),
 summary(train_1)
 ```
 
-Normalización:
+[**Normalización:**]{.underline}
 
 ```{r}
 # Normalizado del conjunto de entrenamiento
@@ -588,7 +584,6 @@ choice = train_0$choice) |> mutate(category=as.factor(category))
 data.frame(Coefficientes = names(modelo3$coefficients), modelo3 = modelo3$coefficients, modelo3_escalado = modelo3_escalado$coefficients, row.names = NULL) |> head()
 ```
 
-
 ```{r}
 caret::confusionMatrix(data=pred$category, reference = pred$choice)
 ```
@@ -597,17 +592,16 @@ caret::confusionMatrix(data=pred$category, reference = pred$choice)
 caret::confusionMatrix(data=pred_escalado$category, reference = pred_escalado$choice)
 ```
 
-
 ### Modelo final
 
 [**Modelo 4**]{.underline}
 
 Eliminamos los siguientes parámetros en orden. El criterio de eliminación es no incluir parámetros no significativos para ninguno de los tres modelos. Tras eliminar un parámetro se vuelve a evaluar el modelo.\
-- intercepto  
-- disp.nabisco  
-- disp.private  
-- disp.kleebler  
-- feat.nabisco   
+- intercepto\
+- disp.nabisco\
+- disp.private\
+- disp.kleebler\
+- feat.nabisco
 
 ```{r}
 #| collapse: true
@@ -622,13 +616,9 @@ control = mmclogit.control(epsilon = 1e-08,
                  break.on.increase = FALSE,
                  break.on.infinite = FALSE,
                  break.on.negative = FALSE))
-```
 
-
-```{r}
 summary(modelo4)
 ```
-
 
 [**Test**]{.underline}
 
@@ -643,7 +633,6 @@ choice = train_0$choice) |> mutate(category=as.factor(category))
 ```
 
 ```{r}
-#| warning: false
 caret::confusionMatrix(data=pred$category, reference = pred$choice)
 ```
 
@@ -656,10 +645,48 @@ predict(modelo4, newdata = test_0, type = "response") |> head()
 $\exp(0.2067485)$ = `r exp(0.2067485)`\
 $\frac{0.009972645}{0.008109995}$ = `r 0.009972645 / 0.008109995`
 
+## Efectos aleatorios
 
-### Comparación de modelos
+```{r}
+random_effects <- matrix(unlist(modelo4$random.effects[1]), ncol=3)
+
+random_effects |> head()
+```
+
+### Comparación individuos
+
+Seleccionamos dos individuos que se hayan encontrado en el mismo escenario y el resultado de su elección haya sido la misma.
+
+Los individuos 103 y 27 son un ejemplo de dos individuos con un escenario idéntico donde eligen la misma marca.
+
+```{r}
+#| out-width: 50%
+user_103 <- Cracker_clean |> filter(id==103) |> filter(price.sunshine<60) |> filter(price.kleebler<100) |> select(-c(r))
+
+user_27 <- Cracker_clean |> filter(id==27) |> filter(price.sunshine<60) |> filter(price.kleebler<100) |> select(-c(r))
+
+cbind(t(user_103),t(user_27)) |> as.data.frame() |> unname()
+```
+
+Si obtenemos las predicciones para estos dos individuos donde todas sus variables son idénticas, las predicciones son distintas.
+
+```{r}
+setNames(
+  data.frame(
+            t(data.frame(c(103,predict(modelo4, user_103)),
+                         c(27,predict(modelo4, user_27))))
+            ,row.names = NULL),
+  c("id","sunshine","kleebler","nabisco"))
+```
+
+Esto se debe a los efectos aleatorios asociados a cada individuo, los cuales hacen que cada individuo tenga un comportamiento específico de él mismo.
+
+```{r}
+random_effects[c(103, 27),]
+```
 
 # Bibliografía
 
-https://www.jstor.org/stable/1392088\
-https://www.jstatsoft.org/article/view/v032i10
+<https://www.jstor.org/stable/1392088>
+
+<https://www.jstatsoft.org/article/view/v032i10>
