@@ -1,16 +1,24 @@
 ---
 title: "Choice of Brand for Crackers"
 author: "Mario Camacho"
-date: today
-#date-format: long
+date: "08-10-2024"
+date-modified: last-modified
 date-format: "DD MMMM YYYY"
+lang: es
+
+abstract: |
+  Nos adentramos en los modelos de respuesta múltiple nominal con medidas repetidas. Se demuestra que incluir efectos aleatorios es necesario para tener un buen ajuste ya que esta correlación entre observaciones es importante recogerla dentro del modelo.
+
+keywords: ["respuesta múltiple", "convergenia modelos", "respuesta nominal", "efectos aleatorios", "medidas repetidas"]
+
 format:
   html:
     toc: TRUE
+    toc-title: "Índice"
     toc-location: left
-    toc-title: Índice
     toc-expand: TRUE
-    css: styles.css
+    theme: css/style.css
+
 editor: visual
 page-layout: full
 knitr:
@@ -21,117 +29,12 @@ code-fold: true
 warning: false
 ---
 
-```{css echo=FALSE}
-/* General Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: #f4f7f6;
-}
-
-/* Encabezados */
-h1, h2, h3 {
-    color: #2E86C1;
-    border-bottom: 2px solid #AED6F1;
-    padding-bottom: 5px;
-    margin-top: 20px;
-}
-
-h1 {
-    font-size: 2.5em;
-}
-
-h2 {
-    font-size: 2em;
-}
-
-h3 {
-    font-size: 1.75em;
-}
-
-/* Tablas */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #ffffff;
-}
-
-table, th, td {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-th {
-    background-color: #2E86C1;
-    color: white;
-}
-
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Código */
-pre, code {
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    padding: 10px;
-    overflow-x: auto;
-    font-family: 'Courier New', Courier, monospace;
-    color: #343a40;
-    border-radius: 5px;
-}
-
-/* Índice interactivo */
-nav#TOC a {
-    text-decoration: none;
-    color: #1A5276;
-}
-
-nav#TOC a:hover {
-    font-weight: bold;
-    color: #154360;
-}
-
-nav#TOC a.active {
-    font-weight: bold;
-    color: #1A5276;
-}
-
-/* Botones de interacción (opcional) */
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: #2E86C1;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 9px #999;
-}
-
-.btn:hover {background-color: #3A98D8}
-
-.btn:active {
-    background-color: #3A98D8;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
-}
-```
-
 ```{r}
 #| output: false
 #| code-fold: false
 library(tidyverse)
 library(RColorBrewer)
 library(ggridges)
-#library(modeest)
 library(ggstance)
 library(Ecdat)
 library(rpivotTable)
